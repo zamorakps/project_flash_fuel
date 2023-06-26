@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import ProfileManagementPage from './routes/ProfileManagementPage.jsx';
+import FuelQuoteHistoryPage from './routes/FuelQuoteHistoryPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "/ProfileManagement",
     element: <ProfileManagementPage />,
+  },
+  {
+    path: "/FuelQuoteHistory",
+    element: <FuelQuoteHistoryPage />
   },
 ]);
 
