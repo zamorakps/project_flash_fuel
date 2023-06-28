@@ -14,10 +14,6 @@ button {
   box-sizing: border-box;
 }
 
-.FormRoot {
-  width: 260px;
-}
-
 .FormField {
   display: grid;
   margin-bottom: 10px;
@@ -37,6 +33,10 @@ button {
 @layer components {
   .FormLabel {
     @apply text-slate-50;
+  }
+
+  .FormMessage {
+    @apply text-red-900
   }
 }
 
