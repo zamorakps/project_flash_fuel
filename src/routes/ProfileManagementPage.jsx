@@ -1,11 +1,3 @@
-// import React from 'react';
-
-// const ProfileManagementPage = () => {
-//   return <h1>New Page</h1>;
-// };
-
-// export default ProfileManagementPage;
-
 import * as Form from '@radix-ui/react-form';
 import React from 'react';
 import '../styles/ProfileManagementPageStyles.css'
