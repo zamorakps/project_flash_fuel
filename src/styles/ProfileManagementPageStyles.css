@@ -1,6 +1,10 @@
 @import '@radix-ui/colors/black-alpha.css';
 @import '@radix-ui/colors/violet.css';
 @import '@radix-ui/colors/mauve.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
 
 /* reset */
 input,
@@ -23,13 +27,17 @@ button {
   font-size: 15px;
   font-weight: 500;
   line-height: 35px;
-  color: white;
 }
 
 .FormMessage {
   font-size: 13px;
-  color: white;
   opacity: 0.8;
+}
+
+@layer components {
+  .FormLabel {
+    @apply text-slate-50;
+  }
 }
 
 .Input,
