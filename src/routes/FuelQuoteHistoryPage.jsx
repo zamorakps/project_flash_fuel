@@ -76,9 +76,9 @@ const FuelQuoteHistoryPage = () => {
     prepareRow,
     page: tablePage,
     gotoPage,
-    canPreviousPage, // Add canPreviousPage to the destructuring assignment
-    canNextPage, // Add canNextPage to the destructuring assignment
-    pageCount, // Add pageCount to the destructuring assignment
+    canPreviousPage,
+    canNextPage,
+    pageCount,
     setPageSize,
   } = useTable(
     {
