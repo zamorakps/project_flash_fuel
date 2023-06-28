@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableFooter } from '@mui/material';
+import '../styles/FuelQuoteHistoryPageStyles.css'; // Import the CSS file
 
 // sample data to represent what you would fetch from the backend
 const sampleData = [
-  { id: 1,
+  {
+    id: 1,
     user_id: 'abc123',
     gallons_requested: 500,
     delivery_date: '2023-07-01',
@@ -19,7 +20,8 @@ const sampleData = [
     suggested_price: 2.7,
     total_amount_due: 810,
   },
-  { id: 3,
+  {
+    id: 3,
     user_id: 'abc123',
     gallons_requested: 600,
     delivery_date: '2023-05-17',
@@ -34,9 +36,9 @@ const FuelQuoteHistoryPage = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-// Filter the data based on the logged-in user ID
-const filteredData = useMemo(() => sampleData.filter(item => item.user_id === loggedUserId), []);
-  
+  // Filter the data based on the logged-in user ID
+  const filteredData = useMemo(() => sampleData.filter(item => item.user_id === loggedUserId), []);
+
   const columns = useMemo(
     () => [
       {
@@ -73,14 +75,11 @@ const filteredData = useMemo(() => sampleData.filter(item => item.user_id === lo
     headerGroups,
     prepareRow,
     page: tablePage,
-    canPreviousPage,
-    canNextPage,
-    pageCount,
     gotoPage,
-    nextPage,
-    previousPage,
+    canPreviousPage, // Add canPreviousPage to the destructuring assignment
+    canNextPage, // Add canNextPage to the destructuring assignment
+    pageCount, // Add pageCount to the destructuring assignment
     setPageSize,
-    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -96,7 +95,7 @@ const filteredData = useMemo(() => sampleData.filter(item => item.user_id === lo
     gotoPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
     setPageSize(parseInt(event.target.value, 10));
@@ -104,56 +103,96 @@ const filteredData = useMemo(() => sampleData.filter(item => item.user_id === lo
 
   return (
     <div>
-      <h1>Fuel Quote History</h1>
-    <Paper>
-      <TableContainer>
-        <Table {...getTableProps()}>
-          <TableHead>
-            {headerGroups.map((headerGroup, index) => (
-              <TableRow {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map(column => (
-                  <TableCell {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
-                      <div>
-                        {column.render('Header')}
-                        {/* Add a sort direction indicator */}
-                        <span>
-                          {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                        </span>
-                      </div>
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableHead>
-        <TableBody {...getTableBodyProps()}>
+      <h1 className="text-3xl font-bold mb-6">Fuel Quote History</h1>
+      <table {...getTableProps()} className="Table">
+        <thead>
+          {headerGroups.map((headerGroup, index) => (
+            <tr {...headerGroup.getHeaderGroupProps()} key={index} className="TableRow">
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  key={column.id}
+                  className="TableCell"
+                >
+                  <div>
+                    {column.render('Header')}
+                    {/* Add a sort direction indicator */}
+                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                  </div>
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
           {tablePage.map((row, rowIndex) => {
             prepareRow(row);
             return (
-              <TableRow {...row.getRowProps()} key={rowIndex}>
+              <tr {...row.getRowProps()} key={rowIndex} className="TableRow">
                 {row.cells.map((cell, cellIndex) => (
-                  <TableCell {...cell.getCellProps()} key={cellIndex}>{cell.render('Cell')}</TableCell>
+                  <td {...cell.getCellProps()} key={cellIndex} className="TableCell">
+                    {cell.render('Cell')}
+                  </td>
                 ))}
-              </TableRow>
+              </tr>
             );
           })}
-        </TableBody>
-      <TableFooter>
-      <TableRow>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="td"
-          count={sampleData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableRow>
-    </TableFooter>
-        </Table>
-      </TableContainer>
-      </Paper>
+        </tbody>
+      </table>
+      <div className="TablePagination">
+        <div>
+          <span>Rows per page:</span>
+          <select value={rowsPerPage} onChange={handleChangeRowsPerPage} className="TablePaginationSelect">
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={100}>100</option>
+          </select>
+        </div>
+        <div>
+          <button
+            onClick={() => handleChangePage(null, 0)}
+            disabled={page === 0}
+            className="TablePaginationButton"
+          >
+            {'<<'}
+          </button>
+          <button
+            onClick={() => handleChangePage(null, page - 1)}
+            disabled={!gotoPage || !canPreviousPage}
+            className="TablePaginationButton"
+          >
+            {'<'}
+          </button>
+          <button
+            onClick={() => handleChangePage(null, page + 1)}
+            disabled={!gotoPage || !canNextPage}
+            className="TablePaginationButton"
+          >
+            {'>'}
+          </button>
+          <button
+            onClick={() => handleChangePage(null, pageCount - 1)}
+            disabled={!gotoPage || !canNextPage}
+            className="TablePaginationButton"
+          >
+            {'>>'}
+          </button>
+          <span>
+            Page{' '}
+            <input
+              type="number"
+              value={page + 1}
+              onChange={event => {
+                const newPage = event.target.value ? Number(event.target.value) - 1 : 0;
+                handleChangePage(null, newPage);
+              }}
+              className="TablePaginationInput"
+            />{' '}
+            of {pageCount}
+          </span>
+        </div>
       </div>
+    </div>
   );
 };
 
