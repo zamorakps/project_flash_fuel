@@ -25,7 +25,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <div className='SiteContainer h-screen flex justify-center items-center'>
+  <div className='SiteContainer h-screen flex justify-center items-center bg-gradient-to-r from-rose-400 to-orange-300'>
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>,
