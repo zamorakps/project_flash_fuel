@@ -1,7 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-// import App from './App.jsx'
-
 import './index.css'
 import {
   createBrowserRouter,
@@ -11,6 +9,8 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import ProfileManagementPage from './routes/ProfileManagementPage.jsx';
 import FuelQuoteHistoryPage from './routes/FuelQuoteHistoryPage.jsx';
 import FuelQuoteFormPage from './routes/FuelQuoteFormPage.jsx';
+import RegistrationFormPage from './routes/RegistrationFormPage';
+import LoginFormPage from './routes/LoginFormPage';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +31,16 @@ const router = createBrowserRouter([
     path: "/FuelQuoteForm",
     element: <FuelQuoteFormPage />,
     title: "Fuel Quote Form"
+  },
+  {
+    path: "/RegistrationForm",
+    element: <RegistrationFormPage />,
+    title: "Registration Form"
+  },
+  {
+    path: "/LoginForm",
+    element: <LoginFormPage />,
+    title: "Login Form"
   },
 ]);
 
