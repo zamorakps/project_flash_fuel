@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
-import '../styles/FuelQuoteHistoryPageStyles.css'; // Import the CSS file
+import '../styles/FuelQuoteHistoryPageStyles.css';
 
 // sample data to represent what you would fetch from the backend
 const sampleData = [
@@ -8,6 +8,7 @@ const sampleData = [
     id: 1,
     user_id: 'abc123',
     gallons_requested: 500,
+    delivery_address: '123 Main St, Anytown, USA',
     delivery_date: '2023-07-01',
     suggested_price: 2.5,
     total_amount_due: 1250,
@@ -16,6 +17,7 @@ const sampleData = [
     id: 2,
     user_id: 'def456',
     gallons_requested: 300,
+    delivery_address: '456 First Ave, Othertown, USA',
     delivery_date: '2023-08-15',
     suggested_price: 2.7,
     total_amount_due: 810,
@@ -24,10 +26,92 @@ const sampleData = [
     id: 3,
     user_id: 'abc123',
     gallons_requested: 600,
+    delivery_address: '789 Elm St, Somewhere, USA',
     delivery_date: '2023-05-17',
     suggested_price: 3.0,
-    total_amount_due: 1100,
+    total_amount_due: 1800,
   },
+  {
+    id: 4,
+    user_id: 'abc123',
+    gallons_requested: 400,
+    delivery_address: '321 Oak St, Elsewhere, USA',
+    delivery_date: '2023-06-30',
+    suggested_price: 2.6,
+    total_amount_due: 1040,
+  },
+  {
+    id: 5,
+    user_id: 'abc123',
+    gallons_requested: 550,
+    delivery_address: '654 Maple Ave, Thisplace, USA',
+    delivery_date: '2023-07-20',
+    suggested_price: 2.8,
+    total_amount_due: 1540,
+  },
+  {
+    id: 6,
+    user_id: 'abc123',
+    gallons_requested: 450,
+    delivery_address: '987 Pine St, Thatplace, USA',
+    delivery_date: '2023-08-05',
+    suggested_price: 2.9,
+    total_amount_due: 1305,
+  },
+  {
+    id: 7,
+    user_id: 'abc123',
+    gallons_requested: 700,
+    delivery_address: '741 Spruce Blvd, Here, USA',
+    delivery_date: '2023-09-15',
+    suggested_price: 3.1,
+    total_amount_due: 2170,
+  },
+  {
+    id: 8,
+    user_id: 'abc123',
+    gallons_requested: 650,
+    delivery_address: '852 Cedar Ln, There, USA',
+    delivery_date: '2023-10-01',
+    suggested_price: 3.2,
+    total_amount_due: 2080,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 10,
+    user_id: 'abc123',
+    gallons_requested: 750,
+    delivery_address: '1234 Birch Rd, Everywhere, USA',
+    delivery_date: '2023-12-15',
+    suggested_price: 3.4,
+    total_amount_due: 2550,
+  },
+  {
+    id: 11,
+    user_id: 'abc123',
+    gallons_requested: 800,
+    delivery_address: '5678 Hickory Ct, Anyplace, USA',
+    delivery_date: '2024-01-10',
+    suggested_price: 3.5,
+    total_amount_due: 2800,
+  },
+  {
+    id: 12,
+    user_id: 'abc123',
+    gallons_requested: 850,
+    delivery_address: '9012 Poplar Ave, Someplace, USA',
+    delivery_date: '2024-02-01',
+    suggested_price: 3.6,
+    total_amount_due: 3060
+  }
 ];
 
 const loggedUserId = 'abc123'; // Simulated logged-in user ID
@@ -42,16 +126,16 @@ const FuelQuoteHistoryPage = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'ID',
+        Header: 'Order #',
         accessor: 'id',
-      },
-      {
-        Header: 'User ID',
-        accessor: 'user_id',
       },
       {
         Header: 'Gallons Requested',
         accessor: 'gallons_requested',
+      },
+      {
+        Header: 'Delivery Address',
+        accessor: 'delivery_address',
       },
       {
         Header: 'Delivery Date',
@@ -67,7 +151,7 @@ const FuelQuoteHistoryPage = () => {
       },
     ],
     []
-  );
+  );  
 
   const {
     getTableProps,
@@ -80,6 +164,7 @@ const FuelQuoteHistoryPage = () => {
     canNextPage,
     pageCount,
     setPageSize,
+    state
   } = useTable(
     {
       columns,
@@ -90,6 +175,7 @@ const FuelQuoteHistoryPage = () => {
     usePagination
   );
 
+/*
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     gotoPage(newPage);
@@ -100,6 +186,24 @@ const FuelQuoteHistoryPage = () => {
     setPage(0);
     setPageSize(parseInt(event.target.value, 10));
   };
+*/
+  const handleChangePage = (event, newPage) => {
+    gotoPage(newPage);
+  };
+
+  /*
+  const handleChangeRowsPerPage = event => {
+    const newPageSize = parseInt(event.target.value, 10);
+    setPageSize(newPageSize);
+  };
+*/
+const handleChangeRowsPerPage = event => {
+  const newPageSize = parseInt(event.target.value, 10);
+  setRowsPerPage(newPageSize);
+  setPageSize(newPageSize);
+  setPage(0); // Reset your own page state
+  gotoPage(0); // Reset React Table's internal page state
+};
 
   return (
     <div>
@@ -148,7 +252,7 @@ const FuelQuoteHistoryPage = () => {
             <option value={100}>100</option>
           </select>
         </div>
-        <div className="PaginationButtonsContainer"> {/* Add new wrapper div with new class */}
+  <div className="PaginationButtonsContainer">
     <button
       onClick={() => handleChangePage(null, 0)}
       disabled={page === 0}
@@ -177,19 +281,19 @@ const FuelQuoteHistoryPage = () => {
       {'>>'}
     </button>
   </div>
-          <div>
+        <div>
           <span>
-            Page{' '}
-            <input
-              type="number"
-              value={page + 1}
-              onChange={event => {
-                const newPage = event.target.value ? Number(event.target.value) - 1 : 0;
-                handleChangePage(null, newPage);
-              }}
-              className="TablePaginationInput PageInput"
-            />
-            of {pageCount}
+              Page{' '}
+              <input
+                type="number"
+                value={state.pageIndex + 1}
+                onChange={event => {
+                  const newPage = event.target.value > 0 ? Number(event.target.value) - 1 : 0;
+                  handleChangePage(null, newPage);
+                }}
+                className="TablePaginationInput PageInput"
+              />
+              of {pageCount}
           </span>
         </div>
       </div>
