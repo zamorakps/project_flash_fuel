@@ -103,7 +103,7 @@ const FuelQuoteHistoryPage = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Fuel Quote History</h1>
+      <h1 className="FormTitle mb-6">Fuel Quote History</h1>
       <table {...getTableProps()} className="Table">
         <thead>
           {headerGroups.map((headerGroup, index) => (
