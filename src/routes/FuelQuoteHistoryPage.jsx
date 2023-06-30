@@ -148,35 +148,36 @@ const FuelQuoteHistoryPage = () => {
             <option value={100}>100</option>
           </select>
         </div>
-        <div>
-          <button
-            onClick={() => handleChangePage(null, 0)}
-            disabled={page === 0}
-            className="TablePaginationButton"
-          >
-            {'<<'}
-          </button>
-          <button
-            onClick={() => handleChangePage(null, page - 1)}
-            disabled={!gotoPage || !canPreviousPage}
-            className="TablePaginationButton"
-          >
-            {'<'}
-          </button>
-          <button
-            onClick={() => handleChangePage(null, page + 1)}
-            disabled={!gotoPage || !canNextPage}
-            className="TablePaginationButton"
-          >
-            {'>'}
-          </button>
-          <button
-            onClick={() => handleChangePage(null, pageCount - 1)}
-            disabled={!gotoPage || !canNextPage}
-            className="TablePaginationButton"
-          >
-            {'>>'}
-          </button>
+        <div className="PaginationButtonsContainer"> {/* Add new wrapper div with new class */}
+    <button
+      onClick={() => handleChangePage(null, 0)}
+      disabled={page === 0}
+      className="TablePaginationButton">
+      {'<<'}
+    </button>
+    <button
+      onClick={() => handleChangePage(null, page - 1)}
+      disabled={!gotoPage || !canPreviousPage}
+      className="TablePaginationButton"
+    >
+      {'<'}
+    </button>
+    <button
+      onClick={() => handleChangePage(null, page + 1)}
+      disabled={!gotoPage || !canNextPage}
+      className="TablePaginationButton"
+    >
+      {'>'}
+    </button>
+    <button
+      onClick={() => handleChangePage(null, pageCount - 1)}
+      disabled={!gotoPage || !canNextPage}
+      className="TablePaginationButton"
+    >
+      {'>>'}
+    </button>
+  </div>
+          <div>
           <span>
             Page{' '}
             <input
@@ -186,8 +187,8 @@ const FuelQuoteHistoryPage = () => {
                 const newPage = event.target.value ? Number(event.target.value) - 1 : 0;
                 handleChangePage(null, newPage);
               }}
-              className="TablePaginationInput"
-            />{' '}
+              className="TablePaginationInput PageInput"
+            />
             of {pageCount}
           </span>
         </div>
