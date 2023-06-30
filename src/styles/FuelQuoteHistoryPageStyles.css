@@ -1,3 +1,4 @@
+/*
 input,
 textarea,
 button {
@@ -96,6 +97,178 @@ button {
 
 .TablePaginationButton:focus {
   box-shadow: 0 0 0 2px var(--black-a1);
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.input {
+  margin-bottom: 0.5rem;
+}
+
+.input label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.input input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--black-a7);
+  font-size: 14px;
+}
+
+.input input:focus {
+  box-shadow: 0 0 0 2px var(--black-a1);
+  outline: none;
+}
+*/
+@import '@radix-ui/colors/black-alpha.css';
+@import '@radix-ui/colors/violet.css';
+@import '@radix-ui/colors/mauve.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+/* reset */
+input,
+textarea,
+button {
+  all: unset;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.TableContainer {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.Table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--black-a5);
+}
+
+.Table thead {
+  background-color: var(--black-a9);
+  color: white;
+}
+
+.Table tbody {
+  background-color: var(--black-a5);
+  color: white;
+}
+
+.Table tr:hover {
+  background-color: var(--black-a1);
+}
+
+.TableCell {
+  padding: 0.5rem;
+  border: 1px solid var(--black-a7);
+}
+
+.TablePagination {
+  display: flex;
+  justify-content: space-between; /* change from flex-end to space-between */
+  align-items: center;
+  padding: 0.5rem;
+  font-size: 14px;
+  color: white;
+}
+
+.TablePagination div {
+  display: flex;
+  align-items: center;
+}
+
+.TablePagination span {
+  margin-right: 0.5rem;
+}
+
+.TablePaginationSelect {
+  font-size: 14px;
+  color: white;
+  background-color: var(--black-a5);
+  border: 1px solid var(--black-a7);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+}
+
+.TablePaginationSelect:hover {
+  box-shadow: 0 0 0 1px black;
+}
+
+.TablePaginationSelect:focus {
+  box-shadow: 0 0 0 2px black;
+}
+
+/*
+.TablePaginationButton {
+  font-size: 14px;
+  color: white;
+  background-color: var(--black-a5);
+  border: 1px solid var(--black-a7);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 0.5rem;
+}
+*/
+
+.TablePaginationButton {
+  font-size: 14px;
+  color: white;
+  background-color: var(--black-a5);
+  border: 1px solid var(--black-a7);
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem; /* Add this new line. */
+}
+
+.PaginationButtonsContainer {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.TablePaginationButton:hover {
+  box-shadow: 0 0 0 1px black;
+}
+
+.TablePaginationButton:focus {
+  box-shadow: 0 0 0 2px black;
+}
+
+.PageInput {
+  width: 50px;  /* Adjust this value as needed */
 }
 
 .text-3xl {
