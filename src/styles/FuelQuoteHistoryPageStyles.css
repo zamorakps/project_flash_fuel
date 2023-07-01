@@ -162,7 +162,7 @@ button {
 }
 
 .TableContainer {
-  width: 100%;
+  width: 50%;
   margin-bottom: 1rem;
 }
 
@@ -170,6 +170,12 @@ button {
   width: 100%;
   border-collapse: collapse;
   background-color: var(--black-a5);
+}
+
+.TableHolder {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .Table thead {
@@ -186,6 +192,19 @@ button {
   background-color: var(--black-a1);
 }
 
+table tbody {
+  display: block;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+table thead,
+table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
 .TableCell {
   padding: 0.5rem;
   border: 1px solid var(--black-a7);
@@ -193,7 +212,8 @@ button {
 
 .TablePagination {
   display: flex;
-  justify-content: space-between; /* change from flex-end to space-between */
+  justify-content: space-between;
+  /* change from flex-end to space-between */
   align-items: center;
   padding: 0.5rem;
   font-size: 14px;
@@ -250,7 +270,8 @@ button {
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   margin-left: 0.5rem;
-  margin-right: 0.5rem; /* Add this new line. */
+  margin-right: 0.5rem;
+  /* Add this new line. */
 }
 
 .PaginationButtonsContainer {
@@ -268,7 +289,14 @@ button {
 }
 
 .PageInput {
-  width: 50px;  /* Adjust this value as needed */
+  width: 50px;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.229) 10.93%, rgba(255, 255, 255, 0.469) 90%);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0px 3px;
+  color: rgb(65, 65, 65);
+  /* Adjust this value as needed */
 }
 
 .text-3xl {

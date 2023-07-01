@@ -86,6 +86,258 @@ const sampleData = [
     total_amount_due: 1980,
   },
   {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
+    id: 9,
+    user_id: 'abc123',
+    gallons_requested: 600,
+    delivery_address: '963 Walnut Dr, Nowhere, USA',
+    delivery_date: '2023-11-20',
+    suggested_price: 3.3,
+    total_amount_due: 1980,
+  },
+  {
     id: 10,
     user_id: 'abc123',
     gallons_requested: 750,
@@ -115,9 +367,9 @@ const sampleData = [
 ];
 
 const loggedUserId = 'abc123'; // Simulated logged-in user ID
+let page = 0;
 
 const FuelQuoteHistoryPage = () => {
-  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Filter the data based on the logged-in user ID
@@ -151,7 +403,7 @@ const FuelQuoteHistoryPage = () => {
       },
     ],
     []
-  );  
+  );
 
   const {
     getTableProps,
@@ -175,126 +427,110 @@ const FuelQuoteHistoryPage = () => {
     usePagination
   );
 
-/*
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    gotoPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-    setPageSize(parseInt(event.target.value, 10));
-  };
-*/
   const handleChangePage = (event, newPage) => {
     gotoPage(newPage);
   };
 
-  /*
   const handleChangeRowsPerPage = event => {
     const newPageSize = parseInt(event.target.value, 10);
+    setRowsPerPage(newPageSize);
     setPageSize(newPageSize);
+    gotoPage(0); // Reset React Table's internal page state
   };
-*/
-const handleChangeRowsPerPage = event => {
-  const newPageSize = parseInt(event.target.value, 10);
-  setRowsPerPage(newPageSize);
-  setPageSize(newPageSize);
-  setPage(0); // Reset your own page state
-  gotoPage(0); // Reset React Table's internal page state
-};
 
   return (
     <div>
       <h1 className="FormTitle mb-6">Fuel Quote History</h1>
-      <table {...getTableProps()} className="Table">
-        <thead>
-          {headerGroups.map((headerGroup, index) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={index} className="TableRow">
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={column.id}
-                  className="TableCell"
-                >
-                  <div>
-                    {column.render('Header')}
-                    {/* Add a sort direction indicator */}
-                    <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {tablePage.map((row, rowIndex) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} key={rowIndex} className="TableRow">
-                {row.cells.map((cell, cellIndex) => (
-                  <td {...cell.getCellProps()} key={cellIndex} className="TableCell">
-                    {cell.render('Cell')}
-                  </td>
+      <div className="TableHolder">
+        <table {...getTableProps()} className="Table">
+          <thead>
+            {headerGroups.map((headerGroup, index) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={index} className="TableRow">
+                {headerGroup.headers.map(column => (
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    key={column.id}
+                    className="TableCell"
+                  >
+                    <div>
+                      {column.render('Header')}
+                      {/* Add a sort direction indicator */}
+                      <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                    </div>
+                  </th>
                 ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <div className="TablePagination">
-        <div>
-          <span>Rows per page:</span>
-          <select value={rowsPerPage} onChange={handleChangeRowsPerPage} className="TablePaginationSelect">
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
-  <div className="PaginationButtonsContainer">
-    <button
-      onClick={() => handleChangePage(null, 0)}
-      disabled={page === 0}
-      className="TablePaginationButton">
-      {'<<'}
-    </button>
-    <button
-      onClick={() => handleChangePage(null, page - 1)}
-      disabled={!gotoPage || !canPreviousPage}
-      className="TablePaginationButton"
-    >
-      {'<'}
-    </button>
-    <button
-      onClick={() => handleChangePage(null, page + 1)}
-      disabled={!gotoPage || !canNextPage}
-      className="TablePaginationButton"
-    >
-      {'>'}
-    </button>
-    <button
-      onClick={() => handleChangePage(null, pageCount - 1)}
-      disabled={!gotoPage || !canNextPage}
-      className="TablePaginationButton"
-    >
-      {'>>'}
-    </button>
-  </div>
-        <div>
-          <span>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {tablePage.map((row, rowIndex) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} key={rowIndex} className="TableRow">
+                  {row.cells.map((cell, cellIndex) => (
+                    <td {...cell.getCellProps()} key={cellIndex} className="TableCell">
+                      {cell.render('Cell')}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="TablePagination">
+          <div>
+            <span>Rows per page:</span>
+            <select value={rowsPerPage} onChange={handleChangeRowsPerPage} className="TablePaginationSelect">
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+          <div className="PaginationButtonsContainer">
+            <button
+              onClick={() => { handleChangePage(null, 0); page = 0; }}
+              disabled={page === 0}
+              className="TablePaginationButton">
+              {'<<'}
+            </button>
+            <button
+              onClick={() => handleChangePage(null, page -= 1)}
+              disabled={!gotoPage || !canPreviousPage}
+              className="TablePaginationButton"
+            >
+              {'<'}
+            </button>
+            <button
+              onClick={() => handleChangePage(null, page += 1)}
+              disabled={!gotoPage || !canNextPage}
+              className="TablePaginationButton"
+            >
+              {'>'}
+            </button>
+            <button
+              onClick={() => { handleChangePage(null, pageCount - 1); page = pageCount - 1 }}
+              disabled={!gotoPage || !canNextPage}
+              className="TablePaginationButton"
+            >
+              {'>>'}
+            </button>
+          </div>
+          <div>
+            <span>
               Page{' '}
               <input
                 type="number"
                 value={state.pageIndex + 1}
                 onChange={event => {
                   const newPage = event.target.value > 0 ? Number(event.target.value) - 1 : 0;
+                  page = newPage;
                   handleChangePage(null, newPage);
                 }}
                 className="TablePaginationInput PageInput"
               />
               of {pageCount}
-          </span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
