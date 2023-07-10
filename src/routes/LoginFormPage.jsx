@@ -1,47 +1,96 @@
-import * as Form from '@radix-ui/react-form';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const LoginFormPage = () => {
+  // setUsername and setPassword are for possible password changes
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Logged on');
+      } else {
+        // Failed authentication
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
+    } catch (error) {
+      // Handle network or server errors
+      console.error('Login failed', error);
+    }
+  };
+
   return (
     <div className="FormContainer w-1/3">
       <h1 className="FormTitle">Client Login</h1>
-      <Form.Root className="FormRoot">
-        <Form.Field className="FormField" name="username">
+      <form onSubmit={handleSubmit}>
+        <div className="FormField">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className="FormLabel">Username</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
-              This field is required.
-            </Form.Message>
+            <label className="FormLabel">Username</label>
+            <span className="FormMessage" style={{ color: 'red' }}>
+              {errorMessage}
+            </span>
           </div>
-          <Form.Control asChild>
-            <input className="Input" type="text" required maxLength={50} />
-          </Form.Control>
-        </Form.Field>
+          <input
+            className="Input"
+            type="text"
+            value={username}
+            onChange={handleUsernameChange}
+            required
+            maxLength={50}
+          />
+        </div>
 
-        <Form.Field className="FormField" name="password">
+        <div className="FormField">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-            <Form.Label className="FormLabel">Password</Form.Label>
-            <Form.Message className="FormMessage" match="valueMissing">
-              This field is required.
-            </Form.Message>
+            <label className="FormLabel">Password</label>
           </div>
-          <Form.Control asChild>
-            <input className="Input" type="password" required minLength={6} />
-          </Form.Control>
-        </Form.Field>
+          <input
+            className="Input"
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+            minLength={6}
+          />
+        </div>
 
-        <Form.Submit asChild>
-          <button className="border-solid shadow w-full text-center duration-300 -transparent hover:bg-white hover:text-black text-white font-semibold py-2 px-4 border border-lightgray hover:border-transparent rounded" style={{ marginTop: 10 }}>
-            Login
-          </button>
-        </Form.Submit>
-      </Form.Root>
+        <button
+          type="submit"
+          className="border-solid shadow w-full text-center duration-300 -transparent hover:bg-white hover:text-black text-white font-semibold py-2 px-4 border border-lightgray hover:border-transparent rounded"
+          style={{ marginTop: 10 }}
+        >
+          Login
+        </button>
+      </form>
 
       <div className="NotAMember">
-      Not a member?{' '} 
-      <Link to="/RegistrationForm">Register here</Link>
+        Not a member?{' '}
+        <Link to="/RegistrationForm">Register here</Link>
       </div>
-
     </div>
   );
 };
