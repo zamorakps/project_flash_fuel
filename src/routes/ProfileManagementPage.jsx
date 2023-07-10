@@ -1,15 +1,62 @@
 import * as Form from '@radix-ui/react-form';
-// import React from 'react';
-import '../styles/ProfileManagementPageStyles.css'
+import { useState } from 'react';
 
+const ProfileManagementPage = () => {
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
+  const [addressLine2, setAddressLine2] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zipCode, setZipCode] = useState('');
 
-const FormDemo = () => {
-  const zipCodeValidation = new RegExp("^(F)?\\d{5,}$");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      // Create an object with the form data
+      const formData = {
+        name,
+        address,
+        addressLine2,
+        city,
+        state,
+        zipCode
+      };
+
+      // Send a request to the backend with the form data
+      const response = await fetch('/api/updateProfile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        // Successful profile update
+        console.log('Profile update successful');
+
+        // Reset form fields
+        setName('');
+        setAddress('');
+        setAddressLine2('');
+        setCity('');
+        setState('');
+        setZipCode('');
+      } else {
+        // Failed profile update
+        const errorData = await response.json();
+        console.error('Profile update failed:', errorData.message);
+      }
+    } catch (error) {
+      console.error('Profile update failed:', error);
+    }
+  };
 
   return (
     <div className="FormContainer w-1/3 mb-6">
       <h1 className="FormTitle">Profile Management</h1>
-      <Form.Root className="FormRoot">
+      <Form.Root className="FormRoot" onSubmit={handleSubmit}>
         <Form.Field className="FormField" name="Name">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className="FormLabel">Name</Form.Label>
@@ -18,19 +65,18 @@ const FormDemo = () => {
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" required />
+            <input className="Input" value={name} onChange={(e) => setName(e.target.value)} required />
           </Form.Control>
         </Form.Field>
         <Form.Field className="FormField" name="Address">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className="FormLabel">Address</Form.Label>
             <Form.Message className="FormMessage" match="valueMissing">
-              Please enter an address
+              Please enter an address.
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" required />
-            {/* <textarea className="Textarea" required /> */}
+            <input className="Input" value={address} onChange={(e) => setAddress(e.target.value)} required />
           </Form.Control>
         </Form.Field>
         <Form.Field className="FormField" name="AddressLine2">
@@ -38,7 +84,7 @@ const FormDemo = () => {
             <Form.Label className="FormLabel">Address Line 2</Form.Label>
           </div>
           <Form.Control asChild>
-            <input className="Input" />
+            <input className="Input" value={addressLine2} onChange={(e) => setAddressLine2(e.target.value)} />
           </Form.Control>
         </Form.Field>
         <Form.Field className="FormField" name="City">
@@ -49,7 +95,7 @@ const FormDemo = () => {
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" required />
+            <input className="Input" value={city} onChange={(e) => setCity(e.target.value)} required />
           </Form.Control>
         </Form.Field>
         <Form.Field className="FormField" name="State">
@@ -60,19 +106,18 @@ const FormDemo = () => {
             </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" required />
+            <input className="Input" value={state} onChange={(e) => setState(e.target.value)} required />
           </Form.Control>
         </Form.Field>
         <Form.Field className="FormField" name="ZipCode">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <Form.Label className="FormLabel">Zip Code</Form.Label>
-            {/* Removed the `formData` to prevent error */}
-            <Form.Message className="FormMessage" match={(value) => value.length < 5 || !zipCodeValidation.test(value)}>Zip code must be at least 5 digits long.</Form.Message>
-            {/* <Form.Message className="FormMessage" match={(value, formData) => value.length < 5}>Zip code must be at least 5 digits long.</Form.Message> */}
-            <Form.Message className="FormMessage" match="valueMissing">Please enter a zip code.</Form.Message>
+            <Form.Message className="FormMessage" match="valueMissing">
+              Please enter a zip code.
+            </Form.Message>
           </div>
           <Form.Control asChild>
-            <input className="Input" required />
+            <input className="Input" value={zipCode} onChange={(e) => setZipCode(e.target.value)} required />
           </Form.Control>
         </Form.Field>
         <Form.Submit asChild>
@@ -82,7 +127,7 @@ const FormDemo = () => {
         </Form.Submit>
       </Form.Root>
     </div>
-  )
+  );
 };
 
-export default FormDemo;
+export default ProfileManagementPage;
