@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const LoginFormPage = () => {
-  // setUsername and setPassword are for possible password changes
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -19,7 +17,7 @@ const LoginFormPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,15 +29,13 @@ const LoginFormPage = () => {
       });
 
       if (response.ok) {
-        console.log('Logged on');
+        alert('Logged on');
       } else {
-        // Failed authentication
-        const errorData = await response.json();
-        setErrorMessage(errorData.message);
+        let fetchedData = await response.json();
+        alert(fetchedData.errorMessage);
       }
     } catch (error) {
-      // Handle network or server errors
-      console.error('Login failed', error);
+      alert('Login failed', error);
     }
   };
 
@@ -50,9 +46,6 @@ const LoginFormPage = () => {
         <div className="FormField">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <label className="FormLabel">Username</label>
-            <span className="FormMessage" style={{ color: 'red' }}>
-              {errorMessage}
-            </span>
           </div>
           <input
             className="Input"
