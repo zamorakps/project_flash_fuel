@@ -17,7 +17,7 @@ const RegistrationFormPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('http://localhost:8080/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,13 +29,13 @@ const RegistrationFormPage = () => {
       });
 
       if (response.ok) {
-        console.log('Registration successful');
+        alert('Registration successful');
       } else {
         const errorData = await response.json();
         setErrorMessage(errorData.message);
       }
     } catch (error) {
-      console.error('Registration failed:', error);
+      alert('Registration failed:', error);
     }
   };
 
