@@ -2,6 +2,9 @@ package com.flashfuel.project.controller;
 
 import com.flashfuel.project.UserManager;
 import com.flashfuel.project.model.User;
+import com.flashfuel.project.model.UserProfileRequest;
+import com.flashfuel.project.model.UserProfileResponse;
+import com.flashfuel.project.service.ProfileManagementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class ProfileManagementController {
 
-    private final UserManager userManager;
+//    private final UserManager userManager;
+    private ProfileManagementService _service;
 
-    public ProfileManagementController(UserManager userManager) {
-        this.userManager = userManager;
+    public ProfileManagementController(ProfileManagementService service) {
+        _service = service;
     }
 
     @PostMapping("/profile/update")
-    public ResponseEntity<?> updateProfile(@RequestBody UserProfileRequest profileRequest) {
-        String username = profileRequest.getUsername();
+    public ResponseEntity<?> updateProfile(@ModelAttribute UserProfileRequest profileRequest) {
+        return ResponseEntity.ok(_service.updateProfile(profileRequest));
+        /*String username = profileRequest.getUsername();
 
         if (!userManager.isUserRegistered(username)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User not found.");
@@ -59,16 +64,18 @@ public class ProfileManagementController {
                 profileRequest.getZipCode()
         );
 
-        return ResponseEntity.ok("Profile updated successfully.");
+        return ResponseEntity.ok("Profile updated successfully.");*/
     }
 
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> getProfile(@RequestParam String username) {
-        if (!userManager.isUserRegistered(username)) {
+        /*if (!userManager.isUserRegistered(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        }*/
 
-        User user = userManager.getUserByUsername(username);
+        return ResponseEntity.ok(_service.getProfile(username));
+
+/*        User user = userManager.getUserByUsername(username);
 
         UserProfileResponse profileResponse = new UserProfileResponse();
         profileResponse.setUsername(user.getUsername());
@@ -79,11 +86,11 @@ public class ProfileManagementController {
         profileResponse.setState(user.getState());
         profileResponse.setZipCode(user.getZipCode());
 
-        return ResponseEntity.ok(profileResponse);
+        return ResponseEntity.ok(profileResponse);*/
     }
 
 
-    public static class UserProfileRequest {
+/*    public static class UserProfileRequest {
         private String username;
         private String name;
         private String address;
@@ -214,7 +221,7 @@ public class ProfileManagementController {
         public void setZipCode(String zipCode) {
             this.zipCode = zipCode;
         }
-    }
+    }*/
 
 }
 
