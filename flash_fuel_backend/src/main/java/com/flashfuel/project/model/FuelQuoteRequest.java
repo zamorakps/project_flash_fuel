@@ -9,6 +9,8 @@ public class FuelQuoteRequest {
     private Integer gallonsRequested;
     private String deliveryAddress;
     private LocalDate deliveryDate;
+    private Double suggestedPrice;
+    private Double totalAmountDue;
 
     // Getters and setters for the fields
 
@@ -42,5 +44,21 @@ public class FuelQuoteRequest {
 
     public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+
+    public Double getSuggestedPrice() {
+        return suggestedPrice;
+    }
+
+    public void setSuggestedPrice(Double suggestedPrice) {
+        this.suggestedPrice = suggestedPrice;
+    }
+
+    public Double getTotalAmountDue() {
+        return totalAmountDue;
+    }
+
+    public void setTotalAmountDue(Double totalAmountDue) {
+        this.totalAmountDue = totalAmountDue;
     }
 }

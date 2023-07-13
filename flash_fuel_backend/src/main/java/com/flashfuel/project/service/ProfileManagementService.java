@@ -33,6 +33,8 @@ public class ProfileManagementService {
         if(errorMsg == null ||
             !errorMsg.isBlank())
             return errorMsg;
+        // if(errorMsg != null && !errorMsg.isBlank())
+        //     return errorMsg;
 
         //get user from database
         var user = new User();
