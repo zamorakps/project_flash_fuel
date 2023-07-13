@@ -15,7 +15,7 @@ const ProfileManagementPage = () => {
         if (response.ok) {
           const profileData = await response.json();
           if (profileData) {
-            setName(profileData.name || '');
+            setName(profileData.name || '');``
             setAddress(profileData.address || '');
             setAddressLine2(profileData.addressLine2 || '');
             setCity(profileData.city || '');
