@@ -37,22 +37,24 @@ const ProfileManagementPage = () => {
     event.preventDefault();
 
     try {
-      const formData = {
-        username: 'admin',
-        name,
-        address,
-        addressLine2,
-        city,
-        state,
-        zipCode
-      };
+      let formData = new FormData();
+
+      formData.append('username', name);
+      formData.append('name', address);
+      formData.append('address', '321 fake st');
+      formData.append('addressLine2', addressLine2);
+      formData.append('city', city);
+      formData.append('state', state);
+      formData.append('zipCode', zipCode);
+
 
       const response = await fetch('http://localhost:8080/api/profile/update', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+        // headers: {
+        //   'Content-Type': 'application/json'
+        // },
+        // body: JSON.stringify(formData)
+        body: formData
       });
 
       if (response.ok) {

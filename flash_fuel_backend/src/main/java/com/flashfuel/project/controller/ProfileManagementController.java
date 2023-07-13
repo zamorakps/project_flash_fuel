@@ -20,11 +20,13 @@ public class ProfileManagementController {
         _service = service;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/profile/update")
     public ResponseEntity<?> updateProfile(@ModelAttribute UserProfileRequest profileRequest) {
         return ResponseEntity.ok(_service.updateProfile(profileRequest));
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/profile")
     public ResponseEntity<UserProfileResponse> getProfile(@RequestParam String username) {
         return ResponseEntity.ok(_service.getProfile(username));
