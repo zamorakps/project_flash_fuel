@@ -14,6 +14,7 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         return ResponseEntity.ok(loginService.getProfile(username, password));
