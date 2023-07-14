@@ -13,6 +13,7 @@ public class UserManager {
     private final Map<String, User> registeredUsers = new HashMap<>();
 
     public User getUserByUsername(String username) {
+        // This shows the password as well but will be removed on database connection
         return registeredUsers.get(username);
     }
 

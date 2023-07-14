@@ -17,27 +17,34 @@ const RegistrationFormPage = () => {
     event.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+
       const response = await fetch('http://localhost:8080/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
-        alert('Registration successful');
+        const result = await response.text();
+
+        if (result === 'true') {
+          alert('Registration successful, you may log in now');
+          window.location.href = '/LoginForm';
+        } else {
+          const errorData = await response.json();
+          setErrorMessage(errorData.message);
+        }
       } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message);
+        alert('Registration failed');
       }
     } catch (error) {
-      alert('Registration failed:', error);
+      alert('Registration failed', error);
     }
   };
+
+
 
 
   return (

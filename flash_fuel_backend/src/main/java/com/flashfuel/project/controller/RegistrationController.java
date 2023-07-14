@@ -14,6 +14,7 @@ public class RegistrationController {
         this.registrationService = registrationService;
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/register")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         return ResponseEntity.ok(registrationService.registerUser(username, password));
