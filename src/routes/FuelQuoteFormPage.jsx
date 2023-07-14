@@ -390,8 +390,10 @@ const FuelQuoteForm = () => {
   const [totalAmountDue, setTotalAmountDue] = useState("");
   const navigate = useNavigate();
 
+  const loggedUserId = 'testUser';
+
   useEffect(() => {
-    fetch("/api/user/profile?username=testUser") // updated API path to match your Spring Boot Controller
+    fetch(`http://localhost:8080/api/user/profile?username=${loggedUserId}`)
       .then(response => response.json())
       .then(data => {
         setUserProfile(data);
@@ -399,17 +401,41 @@ const FuelQuoteForm = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if(gallonsRequested !== "") {
+      fetch("http://localhost:8080/api/fuelquote/calculate", {
+        method: "POST",
+        body: JSON.stringify({"gallonsRequested": gallonsRequested}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Calculated prices:', data);
+        setSuggestedPrice(data.suggestedPrice);
+        setTotalAmountDue(data.totalAmountDue);
+      })
+      .catch(error => {
+        console.log('There was a problem with the calculation request:', error);
+      });
+    }
+  }, [gallonsRequested]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log('handleSubmit triggered');
 
     const fuelQuoteRequest = {
-      "username": "testUser",
+      "username": loggedUserId,
       "gallonsRequested": gallonsRequested,
       "deliveryAddress": userProfile.address,
       "deliveryDate": deliveryDate,
+      "suggestedPrice": suggestedPrice,
+      "totalAmountDue": totalAmountDue,
     };
 
-    fetch("/api/fuelquote/new", {
+    fetch("http://localhost:8080/api/fuelquote/new", {
       method: "POST",
       body: JSON.stringify(fuelQuoteRequest),
       headers: {
@@ -424,9 +450,6 @@ const FuelQuoteForm = () => {
     })
     .then(data => {
       console.log('Fuel quote added:', data);
-      // Set new state variables
-      setSuggestedPrice(data.suggestedPrice);
-      setTotalAmountDue(data.totalAmountDue);
       navigate('/fuelquote/history');
     })
     .catch(error => {
