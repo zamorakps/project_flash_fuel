@@ -220,7 +220,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import '../styles/FuelQuoteHistoryPageStyles.css';
 
-const loggedUserId = 'abc123'; // Simulated logged-in user ID
+const loggedUserId = 'testUser'; // Simulated logged-in user ID
 let page = 0;
 
 const FuelQuoteHistoryPage = () => {
@@ -229,7 +229,7 @@ const FuelQuoteHistoryPage = () => {
 
   // Fetch fuel quote history
   useEffect(() => {
-    fetch(`/api/fuelquote/history?username=${loggedUserId}`) // updated API path to match your Spring Boot Controller
+    fetch(`http://localhost:8080/api/fuelquote/history?username=${loggedUserId}`)
       .then(response => response.json())
       .then(data => {
         setFuelQuoteHistory(data);

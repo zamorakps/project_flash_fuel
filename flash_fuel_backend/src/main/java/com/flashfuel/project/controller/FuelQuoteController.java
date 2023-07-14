@@ -155,32 +155,46 @@ public class FuelQuoteController {
         this.profileManagementService = profileManagementService;
     }
 
-@PostMapping("/fuelquote/new")
-public ResponseEntity<Map<String, Object>> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
-    Double suggestedPrice = 2.0;
-    Double totalAmountDue = suggestedPrice * fuelQuoteRequest.getGallonsRequested();
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/fuelquote/calculate")
+    public ResponseEntity<Map<String, Double>> calculatePrices(@RequestBody Map<String, String> requestBody) {
+        Double gallonsRequested = Double.parseDouble(requestBody.get("gallonsRequested"));
+        Double suggestedPrice = 2.0;  // Replace with your actual calculation
+        Double totalAmountDue = suggestedPrice * gallonsRequested;
 
-    String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest, suggestedPrice, totalAmountDue);
-
-    Map<String, Object> response = new HashMap<>();
-    if(result == null) {
-        response.put("message", "Fuel quote added successfully.");
+        Map<String, Double> response = new HashMap<>();
         response.put("suggestedPrice", suggestedPrice);
         response.put("totalAmountDue", totalAmountDue);
+
         return ResponseEntity.ok(response);
     }
-    else {
-        response.put("message", result);
-        return ResponseEntity.badRequest().body(response);
-    }
-}
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/fuelquote/new")
+    public ResponseEntity<Map<String, Object>> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
+        String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest);
+
+        Map<String, Object> response = new HashMap<>();
+        if(result == null) {
+            response.put("message", "Fuel quote added successfully.");
+            response.put("suggestedPrice", fuelQuoteRequest.getSuggestedPrice());
+            response.put("totalAmountDue", fuelQuoteRequest.getTotalAmountDue());
+            return ResponseEntity.ok(response);
+        }
+        else {
+            response.put("message", result);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/fuelquote/history")
     public ResponseEntity<List<FuelQuoteResponse>> getFuelQuoteHistory(@RequestParam String username) {
         return ResponseEntity.ok(fuelQuoteService.getFuelQuoteHistory(username));
     }
 
-    @GetMapping("/user/profile")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("user/profile")
     public ResponseEntity<UserProfileResponse> getUserProfile(@RequestParam String username) {
         return ResponseEntity.ok(profileManagementService.getProfile(username));
     }

@@ -151,7 +151,7 @@ public class FuelQuoteService {
                 .collect(Collectors.toList());
     }
 
-    public String addFuelQuote(FuelQuoteRequest request, Double suggestedPrice, Double totalAmountDue) {
+    public String addFuelQuote(FuelQuoteRequest request) {
         var errorMsg = getAddFuelQuoteErrors(request);
 
         if(errorMsg != null && !errorMsg.isBlank())
@@ -162,7 +162,7 @@ public class FuelQuoteService {
             return "User not found.";
         }
 
-        fuelQuoteManager.addFuelQuote(user, request.getGallonsRequested(), request.getDeliveryAddress(), request.getDeliveryDate(), suggestedPrice, totalAmountDue);
+        fuelQuoteManager.addFuelQuote(user, request.getGallonsRequested(), request.getDeliveryAddress(), request.getDeliveryDate(), request.getSuggestedPrice(), request.getTotalAmountDue());
 
         return null;
     }
@@ -171,7 +171,21 @@ public class FuelQuoteService {
         List<String> errorList = new ArrayList<>();
 
         // Validation checks here
-        // ...
+
+        if(request.getGallonsRequested() <= 0)
+            errorList.add("Gallons requested must be greater than 0.");
+
+        if(request.getDeliveryAddress() == null || request.getDeliveryAddress().isBlank())
+            errorList.add("Delivery address is required.");
+
+        if(request.getDeliveryDate() == null || request.getDeliveryDate().isBefore(LocalDate.now()))
+            errorList.add("Delivery date must be today's date or in the future.");
+
+        if(request.getSuggestedPrice() == null || request.getSuggestedPrice() < 0)
+            errorList.add("Suggested price cannot be null or negative.");
+
+        if(request.getTotalAmountDue() == null || request.getTotalAmountDue() < 0)
+            errorList.add("Total amount due cannot be null or negative.");
 
         if(errorList.isEmpty())
             return null;
