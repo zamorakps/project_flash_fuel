@@ -2,8 +2,6 @@ package com.flashfuel.project.service;
 import com.flashfuel.project.model.User;
 import com.flashfuel.project.model.UserProfileRequest;
 import com.flashfuel.project.model.UserProfileResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class ProfileManagementService {
     public String updateProfile(UserProfileRequest request) {
         var errorMsg = getUpdateProfileErrors(request);
 
-        if(errorMsg == null ||
+        if(errorMsg != null &&
             !errorMsg.isBlank())
             return errorMsg;
         // if(errorMsg != null && !errorMsg.isBlank())
@@ -55,19 +53,24 @@ public class ProfileManagementService {
 
         //check if user exists
 
-        if(request.getName().isBlank())
+        if(request.getName() == null ||
+            request.getName().isBlank())
             errorList.add("Name is required.");
 
-        if(request.getAddress().isBlank())
+        if(request.getAddress() == null ||
+                request.getAddress().isBlank())
             errorList.add("Address is required.");
 
-        if(request.getCity().isBlank())
+        if(request.getCity() == null ||
+                request.getCity().isBlank())
             errorList.add("City is required.");
 
-        if(request.getState().isBlank())
+        if(request.getState() == null ||
+                request.getState().isBlank())
             errorList.add("State is required.");
 
-        if(request.getZipCode().isBlank())
+        if(request.getZipCode() == null ||
+            request.getZipCode().isBlank())
             errorList.add("Zip Code is required.");
         else {
             String zipCodePattern = "^\\d{5}(?:[-\\s]\\d{4})?$";
