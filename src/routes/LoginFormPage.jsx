@@ -17,27 +17,32 @@ const LoginFormPage = () => {
     event.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('password', password);
+
       const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: formData,
       });
 
       if (response.ok) {
-        alert('Logged on');
+        const result = await response.json();
+
+        if (result.token !== null) {
+          alert('Logged on');
+        } else {
+          alert('Username or password is incorrect');
+        }
       } else {
-        let fetchedData = await response.json();
+        const fetchedData = await response.json();
         alert(fetchedData.errorMessage);
       }
     } catch (error) {
       alert('Login failed', error);
     }
   };
+
 
   return (
     <div className="FormContainer w-1/3">
