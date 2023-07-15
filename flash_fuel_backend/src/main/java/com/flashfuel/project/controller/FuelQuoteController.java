@@ -1,134 +1,6 @@
-// // package com.flashfuel.project.controller;
-
-// // import org.springframework.beans.factory.annotation.Autowired;
-// // import com.flashfuel.project.model.FuelQuoteRequest;
-// // import com.flashfuel.project.model.FuelQuoteResponse;
-// // import com.flashfuel.project.service.FuelQuoteService;
-// // import org.springframework.http.ResponseEntity;
-// // import org.springframework.web.bind.annotation.*;
-
-// // import java.util.List;
-
-// // @RestController
-// // @RequestMapping("/api")
-// // public class FuelQuoteController {
-
-// //     private FuelQuoteService fuelQuoteService;
-
-// //     @Autowired
-// //     public FuelQuoteController(FuelQuoteService fuelQuoteService) {
-// //         this.fuelQuoteService = fuelQuoteService;
-// //     }
-
-// //     @PostMapping("/fuelquote/new")
-// //     public ResponseEntity<String> addFuelQuote(@ModelAttribute FuelQuoteRequest fuelQuoteRequest, @RequestParam Double suggestedPrice, @RequestParam Double totalAmountDue) {
-// //         String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest, suggestedPrice, totalAmountDue);
-// //         if(result == null)
-// //             return ResponseEntity.ok("Fuel quote added successfully.");
-// //         else
-// //             return ResponseEntity.badRequest().body(result);
-// //     }
-
-// //     @GetMapping("/fuelquote/history")
-// //     public ResponseEntity<List<FuelQuoteResponse>> getFuelQuoteHistory(@RequestParam String username) {
-// //         return ResponseEntity.ok(fuelQuoteService.getFuelQuoteHistory(username));
-// //     }
-// // }
-
-// package com.flashfuel.project.controller;
-
-// import org.springframework.beans.factory.annotation.Autowired;
-// import com.flashfuel.project.model.FuelQuoteRequest;
-// import com.flashfuel.project.model.FuelQuoteResponse;
-// import com.flashfuel.project.service.FuelQuoteService;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.*;
-
-// import java.util.List;
-
-// @RestController
-// @RequestMapping("/api")
-// public class FuelQuoteController {
-
-//     private FuelQuoteService fuelQuoteService;
-
-//     @Autowired
-//     public FuelQuoteController(FuelQuoteService fuelQuoteService) {
-//         this.fuelQuoteService = fuelQuoteService;
-//     }
-
-//     @PostMapping("/fuelquote/new")
-//     public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
-//         Double suggestedPrice = 2.0;
-//         Double totalAmountDue = suggestedPrice * fuelQuoteRequest.getGallonsRequested();
-
-//         String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest, suggestedPrice, totalAmountDue);
-//         if(result == null)
-//             return ResponseEntity.ok("Fuel quote added successfully.");
-//         else
-//             return ResponseEntity.badRequest().body(result);
-//     }
-
-//     @GetMapping("/fuelquote/history")
-//     public ResponseEntity<List<FuelQuoteResponse>> getFuelQuoteHistory(@RequestParam String username) {
-//         return ResponseEntity.ok(fuelQuoteService.getFuelQuoteHistory(username));
-//     }
-// }
-
-
-/*
 package com.flashfuel.project.controller;
 
-import com.flashfuel.project.model.FuelQuoteRequest;
-import com.flashfuel.project.model.FuelQuoteResponse;
-import com.flashfuel.project.model.UserProfileResponse;
-import com.flashfuel.project.service.FuelQuoteService;
-import com.flashfuel.project.service.ProfileManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
-@RequestMapping("/api")
-public class FuelQuoteController {
-
-    private final FuelQuoteService fuelQuoteService;
-    private final ProfileManagementService profileManagementService;
-
-    @Autowired
-    public FuelQuoteController(FuelQuoteService fuelQuoteService, ProfileManagementService profileManagementService) {
-        this.fuelQuoteService = fuelQuoteService;
-        this.profileManagementService = profileManagementService;
-    }
-
-    @PostMapping("/fuelquote/new")
-    public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
-        Double suggestedPrice = 2.0;
-        Double totalAmountDue = suggestedPrice * fuelQuoteRequest.getGallonsRequested();
-
-        String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest, suggestedPrice, totalAmountDue);
-        if(result == null)
-            return ResponseEntity.ok("Fuel quote added successfully.");
-        else
-            return ResponseEntity.badRequest().body(result);
-    }
-
-    @GetMapping("/fuelquote/history")
-    public ResponseEntity<List<FuelQuoteResponse>> getFuelQuoteHistory(@RequestParam String username) {
-        return ResponseEntity.ok(fuelQuoteService.getFuelQuoteHistory(username));
-    }
-
-    @GetMapping("/user/profile")
-    public ResponseEntity<UserProfileResponse> getUserProfile(@RequestParam String username) {
-        return ResponseEntity.ok(profileManagementService.getProfile(username));
-    }
-}
-*/
-
-package com.flashfuel.project.controller;
-
+import com.flashfuel.project.model.AddFuelQuoteResponse;
 import com.flashfuel.project.model.FuelQuoteRequest;
 import com.flashfuel.project.model.FuelQuoteResponse;
 import com.flashfuel.project.model.UserProfileResponse;
@@ -157,12 +29,13 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/calculate")
-    public ResponseEntity<Map<String, Double>> calculatePrices(@RequestBody Map<String, String> requestBody) {
-        Double gallonsRequested = Double.parseDouble(requestBody.get("gallonsRequested"));
+    public ResponseEntity<Map<String, Object>> calculatePrices(@RequestBody Map<String, String> requestBody) {
+        Integer gallonsRequested = Integer.parseInt(requestBody.get("gallonsRequested"));
         Double suggestedPrice = 2.0;  // Replace with your actual calculation
         Double totalAmountDue = suggestedPrice * gallonsRequested;
 
-        Map<String, Double> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
+        response.put("gallonsRequested", gallonsRequested);
         response.put("suggestedPrice", suggestedPrice);
         response.put("totalAmountDue", totalAmountDue);
 
@@ -171,19 +44,20 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/new")
-    public ResponseEntity<Map<String, Object>> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
-        String result = fuelQuoteService.addFuelQuote(fuelQuoteRequest);
+    public ResponseEntity<?> addFuelQuote(@RequestBody FuelQuoteRequest fuelQuoteRequest) {
+        AddFuelQuoteResponse result = fuelQuoteService.addFuelQuote(fuelQuoteRequest);
 
-        Map<String, Object> response = new HashMap<>();
+        // If the result is null, that means the quote was not added.
         if(result == null) {
-            response.put("message", "Fuel quote added successfully.");
-            response.put("suggestedPrice", fuelQuoteRequest.getSuggestedPrice());
-            response.put("totalAmountDue", fuelQuoteRequest.getTotalAmountDue());
-            return ResponseEntity.ok(response);
+            AddFuelQuoteResponse response = new AddFuelQuoteResponse();
+            response.setMessage("Fuel quote not added.");
+            return ResponseEntity.badRequest().body(response);
         }
         else {
-            response.put("message", result);
-            return ResponseEntity.badRequest().body(response);
+            // If the result is not null, that means the quote was added successfully.
+            // Now we should return the success message and the data from the result.
+            result.setMessage("Fuel quote added successfully.");
+            return ResponseEntity.ok(result);
         }
     }
 
