@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Component;
+
+@Component
 @Entity
 @Table(name = "fuel_quotes")
 public class FuelQuote {

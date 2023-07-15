@@ -13,7 +13,18 @@ public class UserManager {
     private final Map<String, User> registeredUsers = new HashMap<>();
 
     public User getUserByUsername(String username) {
-        // This shows the password as well but will be removed on database connection
+        User tempUser = new User();
+
+        tempUser.setUsername("testUser");
+        tempUser.setName("Test Name");
+        tempUser.setAddress("123 Fake St");
+        tempUser.setAddressLine2("Apt 1");
+        tempUser.setCity("Houston");
+        tempUser.setState("TX");
+        tempUser.setZipCode("77003");
+
+        registeredUsers.put("testUser", tempUser);
+      
         return registeredUsers.get(username);
     }
 
