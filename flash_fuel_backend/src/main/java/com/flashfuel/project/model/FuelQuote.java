@@ -48,6 +48,10 @@ public class FuelQuote {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public UserCredentials getUser() {
         return user;
     }

@@ -1,3 +1,70 @@
+
+package com.flashfuel.project.controller;
+
+import com.flashfuel.project.model.ClientInformation;
+import com.flashfuel.project.model.FuelQuote;
+import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.FuelQuoteRequest;
+import com.flashfuel.project.model.FuelQuoteResponse;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.model.UserCredentialsDTO;
+import com.flashfuel.project.model.UserProfileResponse;
+import com.flashfuel.project.service.ClientInformationService;
+import com.flashfuel.project.service.FuelQuoteService;
+import com.flashfuel.project.service.ProfileManagementService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+@RestController
+@RequestMapping("/api")
+public class FuelQuoteController {
+
+    private final FuelQuoteService fuelQuoteService;
+    private final ClientInformationService clientInformationService;
+
+    @Autowired
+    public FuelQuoteController(FuelQuoteService fuelQuoteService, ClientInformationService clientInformationService) {
+        this.fuelQuoteService = fuelQuoteService;
+        this.clientInformationService = clientInformationService;
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/fuelquote/calculate")
+    public ResponseEntity<Map<String, Object>> calculatePrices(@RequestBody Map<String, String> requestBody) {
+        Map<String, Object> response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"));
+        return ResponseEntity.ok(response);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/fuelquote/new")
+    public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote, @RequestBody UserCredentialsDTO user) {
+        try {
+            fuelQuoteService.addFuelQuote(user, fuelQuote);
+            return ResponseEntity.ok("Fuel quote added successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
+        }
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/fuelquote/history")
+    public ResponseEntity<List<FuelQuote>> getFuelQuoteHistory(@RequestParam Long userId) {
+        return ResponseEntity.ok(fuelQuoteService.getFuelQuotesByUserId(userId));
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/user/profile")
+    public ResponseEntity<ClientInformation> getUserProfile(@RequestParam Long userId) {
+        return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(userId));
+    }
+}
+
+
+/*
 package com.flashfuel.project.controller;
 
 import com.flashfuel.project.model.ClientInformation;
@@ -68,7 +135,7 @@ public class FuelQuoteController {
         return ResponseEntity.ok(clientInformation);
     }
 }
-
+*/
 
 
 

@@ -60,6 +60,53 @@ public class FuelQuoteService {
         return dto;
     }
 
+    private UserCredentials mapDtoToEntity(UserCredentialsDTO userDto) {
+        UserCredentials user = new UserCredentials();
+        
+        user.setId(userDto.getId());
+        user.setUsername(userDto.getUsername());
+        
+        ClientInformationDTO clientInfoDTO = userDto.getClientInformation();
+        if (clientInfoDTO != null) {
+            ClientInformation clientInfo = new ClientInformation();
+            clientInfo.setId(clientInfoDTO.getId());
+            clientInfo.setAddress(clientInfoDTO.getAddress());
+            clientInfo.setAddressLine2(clientInfoDTO.getAddressLine2());
+            clientInfo.setCity(clientInfoDTO.getCity());
+            clientInfo.setState(clientInfoDTO.getState());
+            clientInfo.setZipCode(clientInfoDTO.getZipCode());
+            user.setClientInformation(clientInfo);
+        }
+        
+        return user;
+    }
+
+    private FuelQuote mapDtoToEntity(FuelQuoteDTO fuelQuoteDto) {
+        FuelQuote fuelQuote = new FuelQuote();
+        
+        fuelQuote.setId(fuelQuoteDto.getId());
+        fuelQuote.setGallonsRequested(fuelQuoteDto.getGallonsRequested());
+        fuelQuote.setDeliveryDate(fuelQuoteDto.getDeliveryDate());
+        fuelQuote.setSuggestedPrice(fuelQuoteDto.getSuggestedPrice());
+        fuelQuote.setTotalAmountDue(fuelQuoteDto.getTotalAmountDue());
+    
+        UserCredentialsDTO userDTO = fuelQuoteDto.getUser();
+        if (userDTO != null) {
+            UserCredentials user = mapDtoToEntity(userDTO);
+            fuelQuote.setUser(user);
+        }
+        
+        return fuelQuote;
+    }    
+
+    public void addFuelQuote(UserCredentialsDTO userDto, FuelQuoteDTO fuelQuoteDto) {
+        UserCredentials user = mapDtoToEntity(userDto);
+        FuelQuote fuelQuote = mapDtoToEntity(fuelQuoteDto);
+        validateFuelQuote(fuelQuoteDto);
+        
+        fuelQuoteManager.addFuelQuote(user, fuelQuote);
+    }
+
     @Autowired
     public FuelQuoteService(FuelQuoteManager fuelQuoteManager) {
         this.fuelQuoteManager = fuelQuoteManager;
@@ -68,27 +115,6 @@ public class FuelQuoteService {
     public List<FuelQuote> getFuelQuotesByUserId(Long userId) {
         return fuelQuoteManager.getFuelQuotesByUserId(userId);
     }
-
-    /*
-    public void addFuelQuote(UserCredentials user, FuelQuote fuelQuote) {
-        FuelQuoteDTO dto = mapToDTO(fuelQuote);
-        validateFuelQuote(dto);
-        fuelQuoteManager.addFuelQuote(user, fuelQuote);
-    }
-
-        public ResponseEntity<Map<String, Object>> calculatePrices(String gallonsRequestedStr) {
-        Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
-        Double suggestedPrice = 2.0;
-        Double totalAmountDue = suggestedPrice * gallonsRequested;
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("gallonsRequested", gallonsRequested);
-        response.put("suggestedPrice", suggestedPrice);
-        response.put("totalAmountDue", totalAmountDue);
-
-        return ResponseEntity.ok(response);
-    }
-    */
 
     public Map<String, Object> calculatePrices(String gallonsRequestedStr) {
         Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
@@ -103,10 +129,12 @@ public class FuelQuoteService {
         return response;
     }
 
+    /*
     public void addFuelQuote(UserCredentialsDTO user, FuelQuoteDTO fuelQuote) {
         validateFuelQuote(fuelQuote);
         fuelQuoteManager.addFuelQuote(user, fuelQuote);
     }
+    */
 
     private String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
         List<String> errorList = new ArrayList<>();
