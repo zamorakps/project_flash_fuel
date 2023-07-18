@@ -67,6 +67,7 @@ public class UserCredentials {
         return clientInformation;
     }
 
+    /*
     public void setClientInformation(ClientInformation clientInformation) {
         if (clientInformation == null) {
             if (this.clientInformation != null) {
@@ -77,4 +78,20 @@ public class UserCredentials {
         }
         this.clientInformation = clientInformation;
     }
+    */
+    public void setClientInformation(ClientInformation clientInformation) {
+        if (clientInformation == null) {
+            if (this.clientInformation != null) {
+                if(this.clientInformation.getUserCredentials() == this) {
+                    this.clientInformation.setUserCredentials(null, false);
+                }
+            }
+        } else {
+            if (clientInformation.getUserCredentials() != this) {
+                clientInformation.setUserCredentials(this, false);
+            }
+        }
+        this.clientInformation = clientInformation;
+    }
+    
 }

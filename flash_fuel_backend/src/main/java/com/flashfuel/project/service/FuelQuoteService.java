@@ -107,7 +107,6 @@ public class FuelQuoteService {
         fuelQuoteManager.addFuelQuote(user, fuelQuote);
     }
 
-    @Autowired
     public FuelQuoteService(FuelQuoteManager fuelQuoteManager) {
         this.fuelQuoteManager = fuelQuoteManager;
     }
@@ -128,13 +127,6 @@ public class FuelQuoteService {
 
         return response;
     }
-
-    /*
-    public void addFuelQuote(UserCredentialsDTO user, FuelQuoteDTO fuelQuote) {
-        validateFuelQuote(fuelQuote);
-        fuelQuoteManager.addFuelQuote(user, fuelQuote);
-    }
-    */
 
     private String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
         List<String> errorList = new ArrayList<>();

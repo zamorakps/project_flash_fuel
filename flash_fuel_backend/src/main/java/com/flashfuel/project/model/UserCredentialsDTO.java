@@ -4,6 +4,7 @@ public class UserCredentialsDTO {
 
     private Long id;
     private String username;
+    private String password;
     private ClientInformationDTO clientInformation;
 
     // Getters and Setters
@@ -21,6 +22,14 @@ public class UserCredentialsDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public ClientInformationDTO getClientInformation() {
