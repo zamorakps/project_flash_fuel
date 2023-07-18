@@ -43,8 +43,8 @@ public class RegistrationService {
         }
         ClientInformation clientInformation = toClientInformation(clientInformationDTO);
         UserCredentials newUser = new UserCredentials(username, password, clientInformation);
-        // long newUserId = userManager.generateNewUserId();
-        long newUserId = 1;
+        long newUserId = userManager.generateNewUserId();
+        // long newUserId = 1;
         newUser.setId(newUserId);
         userManager.registerUser(newUser);
     }
