@@ -1,5 +1,7 @@
 package com.flashfuel.project.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -29,6 +31,7 @@ public class ClientInformation {
     private String zipCode;
 
     @OneToOne(mappedBy = "clientInformation")
+    @JsonBackReference
     private UserCredentials userCredentials;
 
     public ClientInformation() {}
@@ -128,6 +131,5 @@ public class ClientInformation {
             }
         }
         this.userCredentials = userCredentials;
-    }
-    
+    } 
 }

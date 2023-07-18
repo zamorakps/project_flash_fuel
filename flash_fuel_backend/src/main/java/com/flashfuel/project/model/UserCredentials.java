@@ -2,6 +2,8 @@ package com.flashfuel.project.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +27,7 @@ public class UserCredentials {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_information_id", referencedColumnName = "id")
+    @JsonManagedReference
     private ClientInformation clientInformation;
 
     public UserCredentials() {}
@@ -93,5 +96,4 @@ public class UserCredentials {
         }
         this.clientInformation = clientInformation;
     }
-    
 }
