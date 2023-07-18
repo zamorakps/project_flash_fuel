@@ -1,5 +1,214 @@
 package com.flashfuel.project.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.flashfuel.project.FuelQuoteManager;
+import com.flashfuel.project.model.ClientInformation;
+import com.flashfuel.project.model.ClientInformationDTO;
+import com.flashfuel.project.model.FuelQuote;
+import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.model.UserCredentialsDTO;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+
+@Service
+public class FuelQuoteService {
+
+    private final FuelQuoteManager fuelQuoteManager;
+
+    private UserCredentialsDTO mapUserToUserDTO(UserCredentials user) {
+        UserCredentialsDTO userDTO = new UserCredentialsDTO();
+        
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+
+        ClientInformation clientInfo = user.getClientInformation();
+        if (clientInfo != null) {
+            ClientInformationDTO clientInfoDTO = new ClientInformationDTO();
+            clientInfoDTO.setId(clientInfo.getId());
+            clientInfoDTO.setAddress(clientInfo.getAddress());
+            clientInfoDTO.setAddressLine2(clientInfo.getAddressLine2());
+            clientInfoDTO.setCity(clientInfo.getCity());
+            clientInfoDTO.setState(clientInfo.getState());
+            clientInfoDTO.setZipCode(clientInfo.getZipCode());
+            userDTO.setClientInformation(clientInfoDTO);
+        }
+
+        return userDTO;
+    }
+
+    private FuelQuoteDTO mapToDTO(FuelQuote fuelQuote) {
+        FuelQuoteDTO dto = new FuelQuoteDTO();
+        dto.setId(fuelQuote.getId());
+        dto.setGallonsRequested(fuelQuote.getGallonsRequested());
+        dto.setDeliveryDate(fuelQuote.getDeliveryDate());
+        dto.setSuggestedPrice(fuelQuote.getSuggestedPrice());
+        dto.setTotalAmountDue(fuelQuote.getTotalAmountDue());
+    
+        UserCredentialsDTO userDTO = mapUserToUserDTO(fuelQuote.getUser());
+        dto.setUser(userDTO);
+    
+        return dto;
+    }
+
+    @Autowired
+    public FuelQuoteService(FuelQuoteManager fuelQuoteManager) {
+        this.fuelQuoteManager = fuelQuoteManager;
+    }
+
+    public List<FuelQuote> getFuelQuotesByUserId(Long userId) {
+        return fuelQuoteManager.getFuelQuotesByUserId(userId);
+    }
+
+    /*
+    public void addFuelQuote(UserCredentials user, FuelQuote fuelQuote) {
+        FuelQuoteDTO dto = mapToDTO(fuelQuote);
+        validateFuelQuote(dto);
+        fuelQuoteManager.addFuelQuote(user, fuelQuote);
+    }
+
+        public ResponseEntity<Map<String, Object>> calculatePrices(String gallonsRequestedStr) {
+        Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
+        Double suggestedPrice = 2.0;
+        Double totalAmountDue = suggestedPrice * gallonsRequested;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("gallonsRequested", gallonsRequested);
+        response.put("suggestedPrice", suggestedPrice);
+        response.put("totalAmountDue", totalAmountDue);
+
+        return ResponseEntity.ok(response);
+    }
+    */
+
+    public Map<String, Object> calculatePrices(String gallonsRequestedStr) {
+        Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
+        Double suggestedPrice = 2.0;
+        Double totalAmountDue = suggestedPrice * gallonsRequested;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("gallonsRequested", gallonsRequested);
+        response.put("suggestedPrice", suggestedPrice);
+        response.put("totalAmountDue", totalAmountDue);
+
+        return response;
+    }
+
+    public void addFuelQuote(UserCredentialsDTO user, FuelQuoteDTO fuelQuote) {
+        validateFuelQuote(fuelQuote);
+        fuelQuoteManager.addFuelQuote(user, fuelQuote);
+    }
+
+    private String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
+        List<String> errorList = new ArrayList<>();
+        if(fuelQuoteDTO.getGallonsRequested() <= 0)
+            errorList.add("Gallons requested must be greater than 0.");
+
+        if(fuelQuoteDTO.getDeliveryDate().isBefore(LocalDate.now()))
+            errorList.add("Delivery date must be today's date or in the future.");
+
+        if(fuelQuoteDTO.getSuggestedPrice() == null || fuelQuoteDTO.getSuggestedPrice() < 0)
+            errorList.add("Suggested price cannot be null or negative.");
+
+        if(fuelQuoteDTO.getTotalAmountDue() == null || fuelQuoteDTO.getTotalAmountDue() < 0)
+            errorList.add("Total amount due cannot be null or negative.");
+
+        if (errorList.size() == 0)
+            return null;
+
+        var errorMessage = "<ul>";
+        for (String msg : errorList)
+            errorMessage += String.format("<li>%s</li>", msg);
+        errorMessage += "</ul>";
+
+        return errorMessage;
+    }
+}
+
+/*
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.flashfuel.project.FuelQuoteManager;
+import com.flashfuel.project.model.FuelQuote;
+import com.flashfuel.project.model.FuelQuoteDTO;
+
+import org.springframework.http.ResponseEntity;
+
+import java.util.HashMap;
+
+@Service
+public class FuelQuoteService {
+
+    @Autowired
+    private FuelQuoteManager fuelQuoteManager;
+
+    public FuelQuoteDTO addFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
+        validateFuelQuote(fuelQuoteDTO);
+        FuelQuote fuelQuote = new FuelQuote(
+                fuelQuoteDTO.getUser(),
+                fuelQuoteDTO.getGallonsRequested(),
+                fuelQuoteDTO.getDeliveryDate(),
+                fuelQuoteDTO.getSuggestedPrice(),
+                fuelQuoteDTO.getTotalAmountDue());
+        fuelQuoteManager.addFuelQuote(fuelQuote);
+        return fuelQuoteDTO;
+    }
+
+    public ResponseEntity<Map<String, Object>> calculatePrices(String gallonsRequestedStr) {
+        Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
+        Double suggestedPrice = 2.0;
+        Double totalAmountDue = suggestedPrice * gallonsRequested;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("gallonsRequested", gallonsRequested);
+        response.put("suggestedPrice", suggestedPrice);
+        response.put("totalAmountDue", totalAmountDue);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // Implement getFuelQuoteHistory() here
+
+    private void validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
+        List<String> errorList = new ArrayList<>();
+        if(fuelQuoteDTO.getGallonsRequested() <= 0)
+            errorList.add("Gallons requested must be greater than 0.");
+
+        if(fuelQuoteDTO.getDeliveryDate().isBefore(LocalDate.now()))
+            errorList.add("Delivery date must be today's date or in the future.");
+
+        if(fuelQuoteDTO.getSuggestedPrice() == null || fuelQuoteDTO.getSuggestedPrice() < 0)
+            errorList.add("Suggested price cannot be null or negative.");
+
+        if(fuelQuoteDTO.getTotalAmountDue() == null || fuelQuoteDTO.getTotalAmountDue() < 0)
+            errorList.add("Total amount due cannot be null or negative.");
+
+        if(!errorList.isEmpty())
+            throw new RuntimeException(errorList.toString());
+    }
+}
+*/
+
+
+
+/*
+package com.flashfuel.project.service;
+
 import com.flashfuel.project.FuelQuoteManager;
 import com.flashfuel.project.UserManager;
 import com.flashfuel.project.model.AddFuelQuoteResponse;
@@ -110,6 +319,8 @@ public class FuelQuoteService {
         return response;
     }
 }
+*/
+
 
 
 
