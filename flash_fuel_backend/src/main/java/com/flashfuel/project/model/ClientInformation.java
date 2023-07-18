@@ -103,6 +103,7 @@ public class ClientInformation {
         return userCredentials;
     }
 
+    /*
     public void setUserCredentials(UserCredentials userCredentials) {
         if (userCredentials == null) {
             if (this.userCredentials != null) {
@@ -113,4 +114,20 @@ public class ClientInformation {
         }
         this.userCredentials = userCredentials;
     }
+    */
+    public void setUserCredentials(UserCredentials userCredentials, boolean update) {
+        if (userCredentials == null) {
+            if (this.userCredentials != null) {
+                if(this.userCredentials.getClientInformation() == this) {
+                    this.userCredentials.setClientInformation(null);
+                }
+            }
+        } else {
+            if (userCredentials.getClientInformation() != this && update) {
+                userCredentials.setClientInformation(this);
+            }
+        }
+        this.userCredentials = userCredentials;
+    }
+    
 }

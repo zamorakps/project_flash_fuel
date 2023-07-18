@@ -16,6 +16,7 @@ const RegistrationFormPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    /*
     try {
       const formData = new FormData();
       formData.append('username', username);
@@ -25,7 +26,23 @@ const RegistrationFormPage = () => {
         method: 'POST',
         body: formData,
       });
+*/
+    try {
+      const userData = {
+        username,
+        password,
+        clientInformation: {}
+      };
 
+      const response = await fetch('http://localhost:8080/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      /*
       if (response.ok) {
         const result = await response.text();
 
@@ -39,13 +56,23 @@ const RegistrationFormPage = () => {
       } else {
         alert('Registration failed');
       }
+      */
+    if (response.ok) {
+        const result = await response.text();
+
+        if (result === "User registration successful.") {
+            alert('Registration successful, you may log in now');
+            window.location.href = '/LoginForm';
+        } else {
+            setErrorMessage(result);
+        }
+    } else {
+        alert('Registration failed');
+    }     
     } catch (error) {
       alert('Registration failed', error);
     }
   };
-
-
-
 
   return (
     <div className="FormContainer w-1/3">

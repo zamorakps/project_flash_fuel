@@ -41,7 +41,7 @@ public class UserManager {
             // Ensure ClientInformation is set for UserCredentials and vice versa
             ClientInformation clientInformation = user.getClientInformation();
             if (clientInformation != null) {
-                clientInformation.setUserCredentials(user);
+                clientInformation.setUserCredentials(user, true);
                 user.setClientInformation(clientInformation);
             }
 
