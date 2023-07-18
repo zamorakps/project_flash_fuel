@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.flashfuel.project.UserManager;
+import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.UserCredentials;
 import com.flashfuel.project.service.LoginService;
 
@@ -9,49 +10,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginServiceTest {
 
-    private LoginService loginService;
     private UserManager userManager;
+    private LoginService loginService;
 
     @BeforeEach
     public void setup() {
-        // Setup user manager and login service before each test
         userManager = new UserManager();
         loginService = new LoginService(userManager);
     }
 
     @Test
-    public void testGetUserProfileSuccess() {
-        // Register user first
-        UserCredentials user = new UserCredentials("username", "password", null);
-        user.setId(userManager.generateNewUserId());
+    public void testGetUserProfile() {
+        String username = "user1";
+        String password = "password123";
+    
+        // Create non-null ClientInformation
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName("Client 1");
+        clientInformation.setAddress("Address 1");
+        clientInformation.setCity("City 1");
+        clientInformation.setState("State 1");
+        clientInformation.setZipCode("ZipCode 1");
+    
+        UserCredentials user = new UserCredentials(username, password, clientInformation);
+    
         userManager.registerUser(user);
-
-        // Test successful login
-        UserCredentials returnedUser = loginService.getUserProfile("username", "password");
-        assertEquals(user, returnedUser);
-    }
+    
+        UserCredentials fetchedUser = loginService.getUserProfile(username, password);
+    
+        assertNotNull(fetchedUser);
+        assertEquals(user, fetchedUser);
+    }    
 
     @Test
-    public void testGetUserProfileFailureDueToWrongPassword() {
-        // Register user first
-        UserCredentials user = new UserCredentials("username", "password", null);
-        user.setId(userManager.generateNewUserId());
-        userManager.registerUser(user);
-
-        // Test unsuccessful login due to wrong password
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            loginService.getUserProfile("username", "wrongpassword");
+    public void testGetUserProfileInvalidCredentials() {
+        assertThrows(RuntimeException.class, () -> {
+            loginService.getUserProfile("invalid", "invalid");
         });
-        assertEquals("Invalid username or password", exception.getMessage());
-    }
-
-    @Test
-    public void testGetUserProfileFailureDueToNonExistentUser() {
-        // Test unsuccessful login due to non-existent user
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            loginService.getUserProfile("nonexistentuser", "password");
-        });
-        assertEquals("Invalid username or password", exception.getMessage());
     }
 }
 

@@ -1,4 +1,60 @@
-/* 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.flashfuel.project.UserManager;
+import com.flashfuel.project.model.ClientInformationDTO;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.RegistrationService;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class RegistrationServiceTest {
+
+    private UserManager userManager;
+    private RegistrationService registrationService;
+
+    @BeforeEach
+    public void setup() {
+        userManager = new UserManager();
+        registrationService = new RegistrationService(userManager);
+    }
+
+    @Test
+    public void testRegisterUser() {
+        String username = "user1";
+        String password = "password123";
+
+        ClientInformationDTO clientInformationDTO = new ClientInformationDTO();
+        clientInformationDTO.setId(1L);
+        clientInformationDTO.setName("Client 1");
+        clientInformationDTO.setAddress("Address 1");
+        clientInformationDTO.setCity("City 1");
+        clientInformationDTO.setState("State 1");
+        clientInformationDTO.setZipCode("ZipCode 1");
+
+        registrationService.registerUser(username, password, clientInformationDTO);
+
+        UserCredentials user = userManager.getUserByUsername(username);
+
+        assertNotNull(user);
+        assertEquals(username, user.getUsername());
+        assertEquals(password, user.getPassword());
+        assertNotNull(user.getClientInformation());
+        assertEquals(clientInformationDTO.getName(), user.getClientInformation().getName());
+    }
+
+    @Test
+    public void testIsUsernameTaken() {
+        assertFalse(registrationService.isUsernameTaken("user1"));
+
+        registrationService.registerUser("user1", "password123", new ClientInformationDTO());
+
+        assertTrue(registrationService.isUsernameTaken("user1"));
+    }
+}
+
+
+/*
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
