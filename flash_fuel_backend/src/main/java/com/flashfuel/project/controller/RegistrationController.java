@@ -1,7 +1,6 @@
 package com.flashfuel.project.controller;
 
 import com.flashfuel.project.service.RegistrationService;
-import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.UserCredentialsDTO;
 
 import org.springframework.http.ResponseEntity;

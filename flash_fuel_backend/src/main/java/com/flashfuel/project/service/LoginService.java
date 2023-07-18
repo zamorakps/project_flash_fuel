@@ -3,7 +3,6 @@ package com.flashfuel.project.service;
 import com.flashfuel.project.UserManager;
 import com.flashfuel.project.model.UserCredentials;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,19 +10,17 @@ public class LoginService {
 
     private final UserManager userManager;
 
-    @Autowired
     public LoginService(UserManager userManager) {
         this.userManager = userManager;
     }
 
-    public UserCredentials getUserProfile(String username, String password) {
-        UserCredentials user = userManager.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-            return user;
-        } else {
-            throw new RuntimeException("Invalid username or password");
-        }
+public UserCredentials getUserProfile(String username, String password) {
+    if (userManager.isValidCredentials(username, password)) {
+        return userManager.getUserByUsername(username);
+    } else {
+        throw new RuntimeException("Invalid username or password");
     }
+}
 }
 
 /*
