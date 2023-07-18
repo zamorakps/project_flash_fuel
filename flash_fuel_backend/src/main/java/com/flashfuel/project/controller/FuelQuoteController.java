@@ -4,21 +4,16 @@ package com.flashfuel.project.controller;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.FuelQuote;
 import com.flashfuel.project.model.FuelQuoteDTO;
-import com.flashfuel.project.model.FuelQuoteRequest;
-import com.flashfuel.project.model.FuelQuoteResponse;
-import com.flashfuel.project.model.UserCredentials;
 import com.flashfuel.project.model.UserCredentialsDTO;
-import com.flashfuel.project.model.UserProfileResponse;
 import com.flashfuel.project.service.ClientInformationService;
 import com.flashfuel.project.service.FuelQuoteService;
-import com.flashfuel.project.service.ProfileManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @RestController
 @RequestMapping("/api")
 public class FuelQuoteController {
