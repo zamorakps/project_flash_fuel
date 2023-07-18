@@ -1,7 +1,9 @@
 package com.flashfuel.project;
 
 import com.flashfuel.project.model.FuelQuote;
+import com.flashfuel.project.model.FuelQuoteDTO;
 import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.model.UserCredentialsDTO;
 
 import org.springframework.stereotype.Component;
 
