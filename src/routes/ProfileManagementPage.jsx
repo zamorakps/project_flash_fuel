@@ -22,11 +22,9 @@ const ProfileManagementPage = () => {
             setState(profileData.state || '');
             setZipCode(profileData.zipCode || '');
           }
-        } else {
-          alert('Failed to fetch profile data:', response.status);
         }
       } catch (error) {
-        alert('Failed to fetch profile data:', error);
+        console.error('Failed to fetch profile data:', error);
       }
     };
 

@@ -16,10 +16,6 @@ button {
 }
 
 .FormRoot {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 10.93%, rgba(255, 255, 255, 0) 90%);
-    border-radius: 15px;
     padding: 30px 35px;
     position: relative;
 }

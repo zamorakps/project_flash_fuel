@@ -76,7 +76,7 @@ const RegistrationFormPage = () => {
 
   return (
     <div className="FormContainer w-1/3">
-      <h1 className="FormTitle">Registration Form</h1>
+      <h1 className="FormTitle">Registration</h1>
       <form onSubmit={handleSubmit}>
         <div className="FormField">
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>

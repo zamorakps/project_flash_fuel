@@ -20,7 +20,7 @@ const router = createBrowserRouter([
   {
     path: "/ProfileManagement",
     element: <ProfileManagementPage />,
-    title: "Profile Management"
+    title: "Profile"
   },
   {
     path: "/FuelQuoteHistory",
@@ -30,61 +30,58 @@ const router = createBrowserRouter([
   {
     path: "/FuelQuoteForm",
     element: <FuelQuoteFormPage />,
-    title: "Fuel Quote Form"
+    title: "Fuel Quote Form",  
   },
   {
     path: "/RegistrationForm",
     element: <RegistrationFormPage />,
-    title: "Registration Form"
+    title: "Register",
+    group: 1,
+    class: "profile"
   },
   {
     path: "/LoginForm",
     element: <LoginFormPage />,
-    title: "Login Form"
+    title: "Login",
+    group: 1,
+    class: "profile"
   },
 ]);
 
-const headerLinks = router.routes.map((route) => (
-  <NavigationMenu.Link
-    key={route.path}
-    style={{
-      color: 'white',
-      padding: '0 10px',
-      lineHeight: '20px',
-      fontSize: '15px',
-      height: '20px',
-      cursor: 'pointer'
-    }}
-    onClick={() => router.navigate(route.path)}
-  >
-    {route.title}
-  </NavigationMenu.Link>
-));
+const groupedRoutes = {}; 
+
+router.routes.forEach((route) => {
+  if (!groupedRoutes[route.group]) {
+    groupedRoutes[route.group] = [];
+  }
+  groupedRoutes[route.group].push(route);
+});
+
+const headerLinks = Object.values(groupedRoutes).map((group) => {
+  const groupLinks = group.map((route) => {
+    let linkClass = 'nav-item'; 
+    if (route.group === 1) {
+      linkClass += ` ${route.class}-item`; 
+    }
+
+    return (
+      <NavigationMenu.Link
+        key={route.path}
+        onClick={() => router.navigate(route.path)}
+        class={linkClass}
+      >
+        {route.title}
+      </NavigationMenu.Link>
+    );
+  });
+
+  return <div className={group[0].class} key={group[0].group}>{groupLinks}</div>;
+});
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <div className='SiteContainer h-screen flex flex-col justify-start items-center bg-gradient-to-r from-rose-400 to-orange-300'>
-    <NavigationMenu.Root
-      style={{
-        position: 'sticky',
-        top: '10px',
-        width: '90%',
-        height: '50px',
-        margin: '0 auto',
-        zIndex: 1000,
-        backgroundColor: 'var(--black-a5)',
-        borderRadius: '4px',
-        boxShadow: '0 0 0 1px var(--black-a9)',
-      }}
-    >
-      <NavigationMenu.List
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          listStyleType: 'none',
-          padding: '15px 20px',
-          gap: '20px',
-        }}
-      >
+    <NavigationMenu.Root class="nav-root">
+      <NavigationMenu.List class="nav-menu">
         {headerLinks}
       </NavigationMenu.List>
     </NavigationMenu.Root>

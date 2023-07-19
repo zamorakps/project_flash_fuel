@@ -1,3 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+.nav-root {
+    padding: 25px;
+    position: fixed;
+    width: 100%;
+    background: #26262621;
+    border-bottom: 1px solid #27272747;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+}
+
+.nav-menu div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.nav-item {
+    color: white;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.nav-item.active {
+    color: #4e3030cf;
+}
+
+.profile-item:nth-child(2) {
+    background-color: #53202087;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.16) 0px 2px 3px 0px, rgba(242, 242, 242, 0.16) 0px 1px 2px 0px inset, rgba(0, 0, 0, 0.2) 0px -1px 2px 0px inset;
+}
