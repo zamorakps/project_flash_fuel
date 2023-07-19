@@ -33,6 +33,7 @@ public class ClientInformationService {
         return clientInformationManager.getClientInformationByUserId(userId);
     }
 
+    /*
     public void updateClientInformation(Long userId, ClientInformation clientInformation) {
         ClientInformationDTO dto = mapToDTO(clientInformation);
         String errors = getUpdateProfileErrors(dto);
@@ -42,6 +43,17 @@ public class ClientInformationService {
         }
         clientInformationManager.addClientInformation(userId, clientInformation);
     }
+    */
+
+    public void updateClientInformation(Long userId, ClientInformation clientInformation) {
+        ClientInformationDTO dto = mapToDTO(clientInformation);
+        String errors = getUpdateProfileErrors(dto);
+    
+        if (errors != null) {
+            throw new RuntimeException(errors);
+        }
+        clientInformationManager.updateClientInformation(userId, clientInformation);
+    }    
 
     private String getUpdateProfileErrors(ClientInformationDTO request) {
         List<String> errorList = new ArrayList<>();

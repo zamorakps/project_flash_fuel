@@ -4,7 +4,6 @@ package com.flashfuel.project.controller;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.FuelQuote;
 import com.flashfuel.project.model.FuelQuoteDTO;
-import com.flashfuel.project.model.UserCredentialsDTO;
 import com.flashfuel.project.service.ClientInformationService;
 import com.flashfuel.project.service.FuelQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +28,16 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/calculate")
-    public ResponseEntity<Map<String, Object>> calculatePrices(@RequestBody Map<String, String> requestBody) {
-        Map<String, Object> response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"));
+    public ResponseEntity<FuelQuoteDTO> calculatePrices(@RequestBody Map<String, String> requestBody) {
+        FuelQuoteDTO response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"));
         return ResponseEntity.ok(response);
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/new")
-    public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote, @RequestBody UserCredentialsDTO user) {
+    public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote) {
         try {
-            fuelQuoteService.addFuelQuote(user, fuelQuote);
+            fuelQuoteService.addFuelQuote(fuelQuote.getUserId(), fuelQuote);
             return ResponseEntity.ok("Fuel quote added successfully.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
@@ -57,6 +56,7 @@ public class FuelQuoteController {
         return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(userId));
     }
 }
+
 
 
 /*

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.flashfuel.project.FuelQuoteManager;
+import com.flashfuel.project.UserManager;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.ClientInformationDTO;
 import com.flashfuel.project.model.FuelQuote;
@@ -24,63 +25,17 @@ import java.util.HashMap;
 public class FuelQuoteService {
 
     private final FuelQuoteManager fuelQuoteManager;
+    private final UserManager userManager;
+    private final ClientInformationService clientInformationService;
 
-    private UserCredentialsDTO mapUserToUserDTO(UserCredentials user) {
-        UserCredentialsDTO userDTO = new UserCredentialsDTO();
-        
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-
-        ClientInformation clientInfo = user.getClientInformation();
-        if (clientInfo != null) {
-            ClientInformationDTO clientInfoDTO = new ClientInformationDTO();
-            clientInfoDTO.setId(clientInfo.getId());
-            clientInfoDTO.setAddress(clientInfo.getAddress());
-            clientInfoDTO.setAddressLine2(clientInfo.getAddressLine2());
-            clientInfoDTO.setCity(clientInfo.getCity());
-            clientInfoDTO.setState(clientInfo.getState());
-            clientInfoDTO.setZipCode(clientInfo.getZipCode());
-            userDTO.setClientInformation(clientInfoDTO);
-        }
-
-        return userDTO;
+    @Autowired
+    public FuelQuoteService(FuelQuoteManager fuelQuoteManager, ClientInformationService clientInformationService, UserManager userManager) {
+        this.fuelQuoteManager = fuelQuoteManager;
+        this.clientInformationService = clientInformationService;
+        this.userManager = userManager;
     }
 
-    private FuelQuoteDTO mapToDTO(FuelQuote fuelQuote) {
-        FuelQuoteDTO dto = new FuelQuoteDTO();
-        dto.setId(fuelQuote.getId());
-        dto.setGallonsRequested(fuelQuote.getGallonsRequested());
-        dto.setDeliveryDate(fuelQuote.getDeliveryDate());
-        dto.setSuggestedPrice(fuelQuote.getSuggestedPrice());
-        dto.setTotalAmountDue(fuelQuote.getTotalAmountDue());
-    
-        UserCredentialsDTO userDTO = mapUserToUserDTO(fuelQuote.getUser());
-        dto.setUser(userDTO);
-    
-        return dto;
-    }
-
-    private UserCredentials mapDtoToEntity(UserCredentialsDTO userDto) {
-        UserCredentials user = new UserCredentials();
-        
-        user.setId(userDto.getId());
-        user.setUsername(userDto.getUsername());
-        
-        ClientInformationDTO clientInfoDTO = userDto.getClientInformation();
-        if (clientInfoDTO != null) {
-            ClientInformation clientInfo = new ClientInformation();
-            clientInfo.setId(clientInfoDTO.getId());
-            clientInfo.setAddress(clientInfoDTO.getAddress());
-            clientInfo.setAddressLine2(clientInfoDTO.getAddressLine2());
-            clientInfo.setCity(clientInfoDTO.getCity());
-            clientInfo.setState(clientInfoDTO.getState());
-            clientInfo.setZipCode(clientInfoDTO.getZipCode());
-            user.setClientInformation(clientInfo);
-        }
-        
-        return user;
-    }
-
+/*
     private FuelQuote mapDtoToEntity(FuelQuoteDTO fuelQuoteDto) {
         FuelQuote fuelQuote = new FuelQuote();
         
@@ -102,19 +57,28 @@ public class FuelQuoteService {
     public void addFuelQuote(UserCredentialsDTO userDto, FuelQuoteDTO fuelQuoteDto) {
         UserCredentials user = mapDtoToEntity(userDto);
         FuelQuote fuelQuote = mapDtoToEntity(fuelQuoteDto);
-        validateFuelQuote(fuelQuoteDto);
+
+        ClientInformation clientInfo = clientInformationService.getClientInformationByUserId(user.getId());
+        if (clientInfo != null) {
+            user.setClientInformation(clientInfo);  // Set client information to the user object
+            fuelQuote.setUser(user);  // Set the updated user object to the fuelQuote
+        }
+        
+        String errors = validateFuelQuote(fuelQuoteDto);
+
+        if (errors != null) {
+            throw new RuntimeException(errors);
+        }
         
         fuelQuoteManager.addFuelQuote(user, fuelQuote);
     }
-
-    public FuelQuoteService(FuelQuoteManager fuelQuoteManager) {
-        this.fuelQuoteManager = fuelQuoteManager;
-    }
+*/
 
     public List<FuelQuote> getFuelQuotesByUserId(Long userId) {
         return fuelQuoteManager.getFuelQuotesByUserId(userId);
     }
 
+/* 
     public Map<String, Object> calculatePrices(String gallonsRequestedStr) {
         Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
         Double suggestedPrice = 2.0;
@@ -127,7 +91,55 @@ public class FuelQuoteService {
 
         return response;
     }
+*/
 
+public FuelQuoteDTO calculatePrices(String gallonsRequestedStr) {
+    Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
+    Double suggestedPrice = 2.0;
+    Double totalAmountDue = suggestedPrice * gallonsRequested;
+
+    FuelQuoteDTO response = new FuelQuoteDTO();
+    response.setGallonsRequested(gallonsRequested);
+    response.setSuggestedPrice(suggestedPrice);
+    response.setTotalAmountDue(totalAmountDue);
+
+    return response;
+}
+
+public void addFuelQuote(Long userId, FuelQuoteDTO fuelQuoteDto) {
+    ClientInformation clientInfo = clientInformationService.getClientInformationByUserId(userId);
+    if (clientInfo == null) {
+        throw new RuntimeException("Client information not found for user id: " + userId);
+    }
+
+    UserCredentials user = userManager.getUserById(userId);
+    if (user == null) {
+        throw new RuntimeException("User not found with id: " + userId);
+    }
+
+    FuelQuote fuelQuote = mapDtoToEntity(fuelQuoteDto, user);
+
+    String errors = validateFuelQuote(fuelQuoteDto);
+
+    if (errors != null) {
+        throw new RuntimeException(errors);
+    }
+    
+    fuelQuoteManager.addFuelQuote(user, fuelQuote);
+}
+
+private FuelQuote mapDtoToEntity(FuelQuoteDTO fuelQuoteDto, UserCredentials user) {
+    FuelQuote fuelQuote = new FuelQuote();
+    
+    fuelQuote.setId(fuelQuoteDto.getId());
+    fuelQuote.setGallonsRequested(fuelQuoteDto.getGallonsRequested());
+    fuelQuote.setDeliveryDate(fuelQuoteDto.getDeliveryDate());
+    fuelQuote.setSuggestedPrice(fuelQuoteDto.getSuggestedPrice());
+    fuelQuote.setTotalAmountDue(fuelQuoteDto.getTotalAmountDue());
+    fuelQuote.setUser(user);
+    
+    return fuelQuote;
+}    
     private String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
         List<String> errorList = new ArrayList<>();
         if(fuelQuoteDTO.getGallonsRequested() <= 0)
@@ -153,6 +165,68 @@ public class FuelQuoteService {
         return errorMessage;
     }
 }
+
+
+
+/* 
+
+    private UserCredentials mapDtoToEntity(UserCredentialsDTO userDto) {
+        UserCredentials user = new UserCredentials();
+        
+        user.setId(userDto.getId());
+        user.setUsername(userDto.getUsername());
+        
+        ClientInformationDTO clientInfoDTO = userDto.getClientInformation();
+        if (clientInfoDTO != null) {
+            ClientInformation clientInfo = new ClientInformation();
+            clientInfo.setId(clientInfoDTO.getId());
+            clientInfo.setAddress(clientInfoDTO.getAddress());
+            clientInfo.setAddressLine2(clientInfoDTO.getAddressLine2());
+            clientInfo.setCity(clientInfoDTO.getCity());
+            clientInfo.setState(clientInfoDTO.getState());
+            clientInfo.setZipCode(clientInfoDTO.getZipCode());
+            user.setClientInformation(clientInfo);
+        }
+        
+        return user;
+    }
+    private UserCredentialsDTO mapUserToUserDTO(UserCredentials user) {
+        UserCredentialsDTO userDTO = new UserCredentialsDTO();
+        
+        userDTO.setId(user.getId());
+        userDTO.setUsername(user.getUsername());
+
+        ClientInformation clientInfo = user.getClientInformation();
+        if (clientInfo != null) {
+            ClientInformationDTO clientInfoDTO = new ClientInformationDTO();
+            clientInfoDTO.setId(clientInfo.getId());
+            clientInfoDTO.setAddress(clientInfo.getAddress());
+            clientInfoDTO.setAddressLine2(clientInfo.getAddressLine2());
+            clientInfoDTO.setCity(clientInfo.getCity());
+            clientInfoDTO.setState(clientInfo.getState());
+            clientInfoDTO.setZipCode(clientInfo.getZipCode());
+            userDTO.setClientInformation(clientInfoDTO);
+        }
+
+        return userDTO;
+    }
+
+
+
+    private FuelQuoteDTO mapToDTO(FuelQuote fuelQuote) {
+        FuelQuoteDTO dto = new FuelQuoteDTO();
+        dto.setId(fuelQuote.getId());
+        dto.setGallonsRequested(fuelQuote.getGallonsRequested());
+        dto.setDeliveryDate(fuelQuote.getDeliveryDate());
+        dto.setSuggestedPrice(fuelQuote.getSuggestedPrice());
+        dto.setTotalAmountDue(fuelQuote.getTotalAmountDue());
+    
+        UserCredentialsDTO userDTO = mapUserToUserDTO(fuelQuote.getUser());
+        dto.setUser(userDTO);
+    
+        return dto;
+    }
+*/
 
 /*
 import java.time.LocalDate;

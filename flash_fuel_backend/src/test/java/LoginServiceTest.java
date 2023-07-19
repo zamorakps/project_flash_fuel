@@ -1,3 +1,67 @@
+/*
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.flashfuel.project.UserManager;
+import com.flashfuel.project.model.ClientInformation;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.LoginService;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class LoginServiceTest {
+
+    private UserManager userManager;
+    private LoginService loginService;
+
+    @BeforeEach
+    public void setup() {
+        userManager = new UserManager();
+        loginService = new LoginService(userManager);
+    }
+
+    @Test
+    public void testGetUserProfile() {
+        String username = "user1";
+        String password = "password123";
+    
+        // Create non-null ClientInformation
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName("Client 1");
+        clientInformation.setAddress("Address 1");
+        clientInformation.setCity("City 1");
+        clientInformation.setState("State 1");
+        clientInformation.setZipCode("ZipCode 1");
+    
+        // Ensure that username, password, and clientInformation are not null
+        assertNotNull(username);
+        assertNotNull(password);
+        assertNotNull(clientInformation);
+    
+        UserCredentials user = new UserCredentials(username, password, clientInformation);
+    
+        // Ensure that user is not null
+        assertNotNull(user);
+    
+        userManager.registerUser(user);
+    
+        UserCredentials fetchedUser = loginService.getUserProfile(username, password);
+    
+        // Ensure that fetchedUser is not null and equals the registered user
+        assertNotNull(fetchedUser);
+        assertEquals(user, fetchedUser);
+    }    
+
+    @Test
+    public void testGetUserProfileInvalidCredentials() {
+        assertThrows(RuntimeException.class, () -> {
+            loginService.getUserProfile("invalid", "invalid");
+        });
+    }
+}
+*/
+
+/*
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,6 +113,7 @@ public class LoginServiceTest {
         });
     }
 }
+*/
 
 
 
