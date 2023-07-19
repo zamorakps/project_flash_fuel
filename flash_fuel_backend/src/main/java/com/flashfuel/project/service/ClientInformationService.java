@@ -1,12 +1,8 @@
 package com.flashfuel.project.service;
 
 import com.flashfuel.project.model.ClientInformation;
-import com.flashfuel.project.model.UserCredentials;
 import com.flashfuel.project.model.ClientInformationDTO;
-import com.flashfuel.project.model.FuelQuoteDTO;
 import com.flashfuel.project.ClientInformationManager;
-import com.flashfuel.project.UserManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +17,7 @@ public class ClientInformationService {
         ClientInformationDTO dto = new ClientInformationDTO();
         dto.setName(clientInformation.getName());
         dto.setAddress(clientInformation.getAddress());
+        dto.setAddressLine2(clientInformation.getAddressLine2());
         dto.setCity(clientInformation.getCity());
         dto.setState(clientInformation.getState());
         dto.setZipCode(clientInformation.getZipCode());
@@ -38,7 +35,11 @@ public class ClientInformationService {
 
     public void updateClientInformation(Long userId, ClientInformation clientInformation) {
         ClientInformationDTO dto = mapToDTO(clientInformation);
-        getUpdateProfileErrors(dto);
+        String errors = getUpdateProfileErrors(dto);
+
+        if (errors != null) {
+            throw new RuntimeException(errors);
+        }
         clientInformationManager.addClientInformation(userId, clientInformation);
     }
 

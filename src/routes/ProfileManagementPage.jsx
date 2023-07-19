@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const ProfileManagementPage = () => {
+  const [userId, setUserId] = useState(null);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [addressLine2, setAddressLine2] = useState('');
@@ -11,11 +12,13 @@ const ProfileManagementPage = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/profile?username=admin');
+        const userId = 1;
+        setUserId(userId);
+        const response = await fetch(`http://localhost:8080/api/profile?userId=${userId}`);
         if (response.ok) {
           const profileData = await response.json();
           if (profileData) {
-            setName(profileData.name || '');``
+            setName(profileData.name || '');
             setAddress(profileData.address || '');
             setAddressLine2(profileData.addressLine2 || '');
             setCity(profileData.city || '');
@@ -35,24 +38,21 @@ const ProfileManagementPage = () => {
     event.preventDefault();
 
     try {
-      let formData = new FormData();
+      const profileData = {
+        name,
+        address,
+        addressLine2,
+        city,
+        state,
+        zipCode,
+      };
 
-      formData.append('username', name);
-      formData.append('name', address);
-      formData.append('address', '321 fake st');
-      formData.append('addressLine2', addressLine2);
-      formData.append('city', city);
-      formData.append('state', state);
-      formData.append('zipCode', zipCode);
-
-
-      const response = await fetch('http://localhost:8080/api/profile/update', {
+      const response = await fetch(`http://localhost:8080/api/profile/update?userId=${userId}`, {
         method: 'POST',
-        // headers: {
-        //   'Content-Type': 'application/json'
-        // },
-        // body: JSON.stringify(formData)
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
       });
 
       if (response.ok) {
