@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import '../styles/FuelQuoteHistoryPageStyles.css';
 
-const loggedUserId = 'testUser'; // Simulated logged-in user ID
+const loggedUserId = 1; // Simulated logged-in user ID
 let page = 0;
 
 const FuelQuoteHistoryPage = () => {
@@ -11,7 +11,7 @@ const FuelQuoteHistoryPage = () => {
 
   // Fetch fuel quote history
   useEffect(() => {
-    fetch(`http://localhost:8080/api/fuelquote/history?username=${loggedUserId}`)
+    fetch(`http://localhost:8080/api/fuelquote/history?userId=${loggedUserId}`)
       .then(response => response.json())
       .then(data => {
         setFuelQuoteHistory(data);

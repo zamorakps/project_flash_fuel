@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,10 +36,12 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/new")
-    public ResponseEntity<String> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote) {
+    public ResponseEntity<?> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote) {
         try {
             fuelQuoteService.addFuelQuote(fuelQuote.getUserId(), fuelQuote);
-            return ResponseEntity.ok("Fuel quote added successfully.");
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Fuel quote added successfully.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
         }
