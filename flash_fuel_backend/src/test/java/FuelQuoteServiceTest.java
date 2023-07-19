@@ -1,98 +1,126 @@
-/*
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 import com.flashfuel.project.FuelQuoteManager;
 import com.flashfuel.project.UserManager;
+import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.FuelQuote;
-import com.flashfuel.project.model.FuelQuoteRequest;
-import com.flashfuel.project.model.FuelQuoteResponse;
-import com.flashfuel.project.model.User;
+import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.ClientInformationService;
 import com.flashfuel.project.service.FuelQuoteService;
-import com.flashfuel.project.service.ProfileManagementService;
 
-// Add imports for your classes
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 public class FuelQuoteServiceTest {
-
-    @InjectMocks
+    private FuelQuoteManager fuelQuoteManager;
+    private ClientInformationService clientInformationService;
+    private UserManager userManager;
     private FuelQuoteService fuelQuoteService;
 
-    @Mock
-    private FuelQuoteManager fuelQuoteManager;
-
-    @Mock
-    private UserManager userManager;
-
-    @Mock
-    private ProfileManagementService profileManagementService;
-
     @BeforeEach
-    public void init() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        fuelQuoteManager = mock(FuelQuoteManager.class);
+        clientInformationService = mock(ClientInformationService.class);
+        userManager = mock(UserManager.class);
+        fuelQuoteService = new FuelQuoteService(fuelQuoteManager, clientInformationService, userManager);
     }
 
     @Test
-    public void testGetFuelQuoteHistory() {
-        // Set up test data
-        User user = new User();
-        user.setUsername("testUser");
-        FuelQuote fuelQuote = new FuelQuote(user, 500, "123 Fake St", LocalDate.now(), 2.5, 1250.0);
-        List<FuelQuote> fuelQuotes = new ArrayList<>(Arrays.asList(fuelQuote));
+    public void testGetFuelQuotesByUserId() {
+        Long userId = 1L;
+        List<FuelQuote> fuelQuotes = new ArrayList<>();
+        FuelQuote fuelQuote = new FuelQuote();
+        fuelQuotes.add(fuelQuote);
+        when(fuelQuoteManager.getFuelQuotesByUserId(userId)).thenReturn(fuelQuotes);
+        List<FuelQuote> result = fuelQuoteService.getFuelQuotesByUserId(userId);
+        assertEquals(fuelQuotes, result);
+    }
 
-        // Configure mocks
-        when(fuelQuoteManager.getFuelQuotesByUsername("testUser")).thenReturn(fuelQuotes);
-
-        // Call the method under test
-        List<FuelQuoteResponse> result = fuelQuoteService.getFuelQuoteHistory("testUser");
-
-        // Verify interactions
-        verify(fuelQuoteManager).getFuelQuotesByUsername("testUser");
-
-        // Assert results
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("testUser", result.get(0).getUsername());
+    @Test
+    public void testCalculatePrices() {
+        String gallonsRequestedStr = "10";
+        FuelQuoteDTO fuelQuoteDTO = fuelQuoteService.calculatePrices(gallonsRequestedStr);
+        assertEquals(Integer.valueOf(gallonsRequestedStr), fuelQuoteDTO.getGallonsRequested());
+        assertEquals(2.0, fuelQuoteDTO.getSuggestedPrice());
+        assertEquals(20.0, fuelQuoteDTO.getTotalAmountDue());
     }
 
     @Test
     public void testAddFuelQuote() {
-        // Set up test data
-        User user = new User();
-        user.setUsername("testUser");
-        FuelQuoteRequest request = new FuelQuoteRequest();
-        request.setUsername("testUser");
-        request.setGallonsRequested(500);
-        request.setDeliveryAddress("123 Fake St");
-        request.setDeliveryDate(LocalDate.now());
-        request.setSuggestedPrice(2.5);
-        request.setTotalAmountDue(1250.0);
+        Long userId = 1L;
+        FuelQuoteDTO fuelQuoteDto = new FuelQuoteDTO();
+        fuelQuoteDto.setGallonsRequested(10);
+        fuelQuoteDto.setDeliveryDate(LocalDate.now().plusDays(5));
+        fuelQuoteDto.setSuggestedPrice(2.0);
+        fuelQuoteDto.setTotalAmountDue(20.0);
 
-        // Configure mocks
-        when(userManager.getUserByUsername("testUser")).thenReturn(user);
+        UserCredentials user = new UserCredentials();
+        user.setId(userId);
 
-        // Call the method under test
-        com.flashfuel.project.model.AddFuelQuoteResponse result = fuelQuoteService.addFuelQuote(request);
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName("Test");
 
-        // Verify interactions
-        verify(userManager).getUserByUsername("testUser");
-        verify(fuelQuoteManager).addFuelQuote(any(User.class), eq(500), eq("123 Fake St"), any(LocalDate.class), eq(2.5), eq(1250.0));
+        when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(clientInformation);
+        when(userManager.getUserById(userId)).thenReturn(user);
 
-        // Assert results
-        assertNotNull(result);
-        assertEquals("Fuel quote added successfully.", result.getMessage());
+        fuelQuoteService.addFuelQuote(userId, fuelQuoteDto);
+
+        verify(fuelQuoteManager, times(1)).addFuelQuote(eq(user), any(FuelQuote.class));
+    }
+
+    @Test
+    public void testValidateFuelQuote() {
+        // Test with valid FuelQuoteDTO
+        FuelQuoteDTO validFuelQuoteDto = new FuelQuoteDTO();
+        validFuelQuoteDto.setGallonsRequested(10);
+        validFuelQuoteDto.setDeliveryDate(LocalDate.now().plusDays(1));
+        validFuelQuoteDto.setSuggestedPrice(2.5);
+        validFuelQuoteDto.setTotalAmountDue(25.0);
+        assertNull(fuelQuoteService.validateFuelQuote(validFuelQuoteDto));
+
+        // Test with FuelQuoteDTO with zero gallons requested
+        FuelQuoteDTO zeroGallonsDto = new FuelQuoteDTO();
+        zeroGallonsDto.setGallonsRequested(0);
+        zeroGallonsDto.setDeliveryDate(LocalDate.now().plusDays(1));
+        zeroGallonsDto.setSuggestedPrice(2.5);
+        zeroGallonsDto.setTotalAmountDue(25.0);
+        assertNotNull(fuelQuoteService.validateFuelQuote(zeroGallonsDto));
+        assertTrue(fuelQuoteService.validateFuelQuote(zeroGallonsDto).contains("Gallons requested must be greater than 0."));
+
+        // Test with FuelQuoteDTO with delivery date in the past
+        FuelQuoteDTO pastDeliveryDateDto = new FuelQuoteDTO();
+        pastDeliveryDateDto.setGallonsRequested(10);
+        pastDeliveryDateDto.setDeliveryDate(LocalDate.now().minusDays(1));
+        pastDeliveryDateDto.setSuggestedPrice(2.5);
+        pastDeliveryDateDto.setTotalAmountDue(25.0);
+        assertNotNull(fuelQuoteService.validateFuelQuote(pastDeliveryDateDto));
+        assertTrue(fuelQuoteService.validateFuelQuote(pastDeliveryDateDto).contains("Delivery date must be today's date or in the future."));
+
+        // Test with FuelQuoteDTO with negative suggested price
+        FuelQuoteDTO negativeSuggestedPriceDto = new FuelQuoteDTO();
+        negativeSuggestedPriceDto.setGallonsRequested(10);
+        negativeSuggestedPriceDto.setDeliveryDate(LocalDate.now().plusDays(1));
+        negativeSuggestedPriceDto.setSuggestedPrice(-2.5);
+        negativeSuggestedPriceDto.setTotalAmountDue(25.0);
+        assertNotNull(fuelQuoteService.validateFuelQuote(negativeSuggestedPriceDto));
+        assertTrue(fuelQuoteService.validateFuelQuote(negativeSuggestedPriceDto).contains("Suggested price cannot be null or negative."));
+
+        // Test with FuelQuoteDTO with negative total amount due
+        FuelQuoteDTO negativeTotalAmountDueDto = new FuelQuoteDTO();
+        negativeTotalAmountDueDto.setGallonsRequested(10);
+        negativeTotalAmountDueDto.setDeliveryDate(LocalDate.now().plusDays(1));
+        negativeTotalAmountDueDto.setSuggestedPrice(2.5);
+        negativeTotalAmountDueDto.setTotalAmountDue(-25.0);
+        assertNotNull(fuelQuoteService.validateFuelQuote(negativeTotalAmountDueDto));
+        assertTrue(fuelQuoteService.validateFuelQuote(negativeTotalAmountDueDto).contains("Total amount due cannot be null or negative."));
     }
 }
- */

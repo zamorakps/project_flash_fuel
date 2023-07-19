@@ -50,6 +50,6 @@ public class RegistrationService {
     }
     
     public boolean isUsernameAndPasswordValid(String username, String password) {
-        return !username.isEmpty() && password.length() >= 6;
+        return username != null && !username.isEmpty() && password != null && password.length() >= 6;
     }
 }
