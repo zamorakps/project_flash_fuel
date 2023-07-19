@@ -55,7 +55,7 @@ public class ClientInformationService {
         clientInformationManager.updateClientInformation(userId, clientInformation);
     }    
 
-    private String getUpdateProfileErrors(ClientInformationDTO request) {
+    public String getUpdateProfileErrors(ClientInformationDTO request) {
         List<String> errorList = new ArrayList<>();
 
         if (request.getName() == null || request.getName().isBlank())

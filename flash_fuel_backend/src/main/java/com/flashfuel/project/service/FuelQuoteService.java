@@ -140,7 +140,7 @@ private FuelQuote mapDtoToEntity(FuelQuoteDTO fuelQuoteDto, UserCredentials user
     
     return fuelQuote;
 }    
-    private String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
+    public String validateFuelQuote(FuelQuoteDTO fuelQuoteDTO) {
         List<String> errorList = new ArrayList<>();
         if(fuelQuoteDTO.getGallonsRequested() <= 0)
             errorList.add("Gallons requested must be greater than 0.");
