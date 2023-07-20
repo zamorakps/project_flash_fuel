@@ -11,6 +11,24 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class ClientInformationManager {
+    private final ClientInformationRepository clientInformationRepository;
+
+    public ClientInformationManager(ClientInformationRepository clientInformationRepository) {
+        this.clientInformationRepository = clientInformationRepository;
+    }
+
+    public ClientInformation getClientInformationByUserId(Long userId) {
+        return clientInformationRepository.findById(userId).orElse(null);
+    }
+
+    public void updateClientInformation(Long userId, ClientInformation clientInformation) {
+        clientInformationRepository.save(clientInformation);
+    }
+}
+
+/*
+@Component
+public class ClientInformationManager {
     private Map<Long, ClientInformation> clientInfo;
     private final UserManager userManager; 
     private AtomicLong clientIdGenerator = new AtomicLong(0);
@@ -27,21 +45,6 @@ public class ClientInformationManager {
     public ClientInformation getClientInformationByUserId(Long userId) {
         return clientInfo.get(userId);
     }
-
-    /*
-public void updateClientInformation(Long userId, ClientInformation clientInformation) {
-    synchronized (this) {
-        ClientInformation currentInfo = clientInfo.get(userId);
-        if (currentInfo != null) {
-            clientInformation.setId(currentInfo.getId());
-        } else {
-            long newClientId = generateNewClientId();
-            clientInformation.setId(newClientId);
-        }
-        clientInfo.put(userId, clientInformation);
-    }
-}
-*/
 
 public void updateClientInformation(Long userId, ClientInformation clientInformation) {
     synchronized (this) {
@@ -61,4 +64,4 @@ public void updateClientInformation(Long userId, ClientInformation clientInforma
     }
 }
 }
-
+*/

@@ -10,13 +10,8 @@ import jakarta.persistence.*;
 @Table(name = "user_credentials")
 public class UserCredentials {
 
-    /*
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    */
-
-    @Id
     private Long id;
 
     @Column(unique = true)

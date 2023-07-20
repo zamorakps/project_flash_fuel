@@ -34,64 +34,10 @@ public class FuelQuoteService {
         this.clientInformationService = clientInformationService;
         this.userManager = userManager;
     }
-
-/*
-    private FuelQuote mapDtoToEntity(FuelQuoteDTO fuelQuoteDto) {
-        FuelQuote fuelQuote = new FuelQuote();
-        
-        fuelQuote.setId(fuelQuoteDto.getId());
-        fuelQuote.setGallonsRequested(fuelQuoteDto.getGallonsRequested());
-        fuelQuote.setDeliveryDate(fuelQuoteDto.getDeliveryDate());
-        fuelQuote.setSuggestedPrice(fuelQuoteDto.getSuggestedPrice());
-        fuelQuote.setTotalAmountDue(fuelQuoteDto.getTotalAmountDue());
     
-        UserCredentialsDTO userDTO = fuelQuoteDto.getUser();
-        if (userDTO != null) {
-            UserCredentials user = mapDtoToEntity(userDTO);
-            fuelQuote.setUser(user);
-        }
-        
-        return fuelQuote;
-    }    
-
-    public void addFuelQuote(UserCredentialsDTO userDto, FuelQuoteDTO fuelQuoteDto) {
-        UserCredentials user = mapDtoToEntity(userDto);
-        FuelQuote fuelQuote = mapDtoToEntity(fuelQuoteDto);
-
-        ClientInformation clientInfo = clientInformationService.getClientInformationByUserId(user.getId());
-        if (clientInfo != null) {
-            user.setClientInformation(clientInfo);  // Set client information to the user object
-            fuelQuote.setUser(user);  // Set the updated user object to the fuelQuote
-        }
-        
-        String errors = validateFuelQuote(fuelQuoteDto);
-
-        if (errors != null) {
-            throw new RuntimeException(errors);
-        }
-        
-        fuelQuoteManager.addFuelQuote(user, fuelQuote);
-    }
-*/
-
     public List<FuelQuote> getFuelQuotesByUserId(Long userId) {
         return fuelQuoteManager.getFuelQuotesByUserId(userId);
     }
-
-/* 
-    public Map<String, Object> calculatePrices(String gallonsRequestedStr) {
-        Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
-        Double suggestedPrice = 2.0;
-        Double totalAmountDue = suggestedPrice * gallonsRequested;
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("gallonsRequested", gallonsRequested);
-        response.put("suggestedPrice", suggestedPrice);
-        response.put("totalAmountDue", totalAmountDue);
-
-        return response;
-    }
-*/
 
 public FuelQuoteDTO calculatePrices(String gallonsRequestedStr) {
     Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
