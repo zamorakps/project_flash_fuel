@@ -10,7 +10,7 @@ const FuelQuoteForm = () => {
   const [totalAmountDue, setTotalAmountDue] = useState("");
   const navigate = useNavigate();
 
-  const loggedUserId = 1;
+  const loggedUserId = 6;
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/user/profile?userId=${loggedUserId}`)
