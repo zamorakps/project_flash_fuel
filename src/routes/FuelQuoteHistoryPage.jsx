@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import '../styles/FuelQuoteHistoryPageStyles.css';
 
-const loggedUserId = 1; // Simulated logged-in user ID
+const loggedUserId = 6; // Simulated logged-in user ID
 let page = 0;
 
 const FuelQuoteHistoryPage = () => {

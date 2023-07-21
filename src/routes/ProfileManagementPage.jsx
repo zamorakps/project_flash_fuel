@@ -12,7 +12,7 @@ const ProfileManagementPage = () => {
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const userId = 4;
+        const userId = 6;
         setUserId(userId);
         const response = await fetch(`http://localhost:8080/api/profile?userId=${userId}`);
         if (response.ok) {
@@ -37,12 +37,6 @@ const ProfileManagementPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-
-
-{/* <Form.Message className="FormMessage" match={(value, formData) => value.length < 5 || !zipCodeValidation.test(value)}>Zip code must be at least 5 digits long.</Form.Message>
-      {/* <Form.Message className="FormMessage" match={(value, formData) => value.length < 5}>Zip code must be at least 5 digits long.</Form.Message> */}
-      // <Form.Message className="FormMessage" match="valueMissing">Please enter a zip code.</Form.Message> */}
 
       const zipCodeValidation = new RegExp("^(F)?\\d{5,}$");
 
