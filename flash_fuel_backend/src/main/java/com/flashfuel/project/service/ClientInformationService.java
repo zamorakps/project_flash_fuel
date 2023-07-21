@@ -53,16 +53,16 @@ public class ClientInformationService {
     }
     */
 
-    public void updateClientInformation(Long userId, ClientInformation newClientInformation) {
+    public String updateClientInformation(Long userId, ClientInformation newClientInformation) {
 //        ClientInformationDTO dto = mapToDTO(newClientInformation);
         String errors = getUpdateProfileErrors(newClientInformation);
     
         if (errors != null) {
-            throw new RuntimeException(errors);
+            return errors;
         }
 
-
-        var info = userCredentialsRepository.findById(userId).get().getClientInformation();
+        var user = userCredentialsRepository.findById(userId).get();
+        var info = user.getClientInformation();
 
         info.setName(newClientInformation.getName());
         info.setAddress(newClientInformation.getAddress());
@@ -72,6 +72,8 @@ public class ClientInformationService {
         info.setZipCode(newClientInformation.getZipCode());
 
         clientInformationRepository.save(info);
+
+        return null;
     }    
 
     public String getUpdateProfileErrors(ClientInformation request) {

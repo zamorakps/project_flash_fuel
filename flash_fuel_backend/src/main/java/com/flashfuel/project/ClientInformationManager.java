@@ -23,10 +23,8 @@ public class ClientInformationManager {
     public ClientInformation getClientInformationByUserId(Long userId) {
         var user = userCredentialsRepository.findById(userId);
 
-        if(user == null)
-            return null;
+        return user.map(UserCredentials::getClientInformation).orElse(null);
 
-        return user.get().getClientInformation();
     }
 
     public void updateClientInformation(Long userId, ClientInformation clientInformation) {
