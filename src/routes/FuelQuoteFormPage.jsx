@@ -17,13 +17,19 @@ const FuelQuoteForm = () => {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        // const clientInfo = data.clientInformation;
         const clientInfo = data;
-        const fullAddress = `${clientInfo.address}, ${clientInfo.addressLine2}, ${clientInfo.city}, ${clientInfo.state}, ${clientInfo.zipCode}`;
+
+        let fullAddress = `${clientInfo.address}, `;
+        if (clientInfo.addressLine2) {
+          fullAddress += `${clientInfo.addressLine2}, `;
+        }
+        fullAddress += `${clientInfo.city}, ${clientInfo.state}, ${clientInfo.zipCode}`;        
+        
         const fullUserProfile = {
           ...data,
           fullAddress,
         };
+
         setUserProfile(fullUserProfile);
         console.log('User profile:', fullUserProfile);
       });
