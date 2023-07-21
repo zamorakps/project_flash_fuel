@@ -1,5 +1,7 @@
 package com.flashfuel.project.service;
 
+import com.flashfuel.project.ClientInformationRepository;
+import com.flashfuel.project.UserCredentialsRepository;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.ClientInformationDTO;
 import com.flashfuel.project.ClientInformationManager;
@@ -12,6 +14,16 @@ import java.util.List;
 public class ClientInformationService {
 
     private final ClientInformationManager clientInformationManager;
+    private final ClientInformationRepository clientInformationRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
+
+    public ClientInformationService(ClientInformationManager clientInformationManager,
+                                    ClientInformationRepository clientInformationRepository,
+                                    UserCredentialsRepository userCredentialsRepository) {
+        this.clientInformationManager = clientInformationManager;
+        this.clientInformationRepository = clientInformationRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
+    }
 
     private ClientInformationDTO mapToDTO(ClientInformation clientInformation) {
         ClientInformationDTO dto = new ClientInformationDTO();
@@ -23,10 +35,6 @@ public class ClientInformationService {
         dto.setZipCode(clientInformation.getZipCode());
     
         return dto;
-    }
-
-    public ClientInformationService(ClientInformationManager clientInformationManager) {
-        this.clientInformationManager = clientInformationManager;
     }
 
     public ClientInformation getClientInformationByUserId(Long userId) {
@@ -45,17 +53,28 @@ public class ClientInformationService {
     }
     */
 
-    public void updateClientInformation(Long userId, ClientInformation clientInformation) {
-        ClientInformationDTO dto = mapToDTO(clientInformation);
-        String errors = getUpdateProfileErrors(dto);
+    public void updateClientInformation(Long userId, ClientInformation newClientInformation) {
+//        ClientInformationDTO dto = mapToDTO(newClientInformation);
+        String errors = getUpdateProfileErrors(newClientInformation);
     
         if (errors != null) {
             throw new RuntimeException(errors);
         }
-        clientInformationManager.updateClientInformation(userId, clientInformation);
+
+
+        var info = userCredentialsRepository.findById(userId).get().getClientInformation();
+
+        info.setName(newClientInformation.getName());
+        info.setAddress(newClientInformation.getAddress());
+        info.setAddressLine2(newClientInformation.getAddressLine2());
+        info.setCity(newClientInformation.getCity());
+        info.setState(newClientInformation.getState());
+        info.setZipCode(newClientInformation.getZipCode());
+
+        clientInformationRepository.save(info);
     }    
 
-    public String getUpdateProfileErrors(ClientInformationDTO request) {
+    public String getUpdateProfileErrors(ClientInformation request) {
         List<String> errorList = new ArrayList<>();
 
         if (request.getName() == null || request.getName().isBlank())

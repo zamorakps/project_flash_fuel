@@ -12,13 +12,21 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 public class ClientInformationManager {
     private final ClientInformationRepository clientInformationRepository;
+    private final UserCredentialsRepository userCredentialsRepository;
 
-    public ClientInformationManager(ClientInformationRepository clientInformationRepository) {
+    public ClientInformationManager(ClientInformationRepository clientInformationRepository,
+                                    UserCredentialsRepository userCredentialsRepository) {
         this.clientInformationRepository = clientInformationRepository;
+        this.userCredentialsRepository = userCredentialsRepository;
     }
 
     public ClientInformation getClientInformationByUserId(Long userId) {
-        return clientInformationRepository.findById(userId).orElse(null);
+        var user = userCredentialsRepository.findById(userId);
+
+        if(user == null)
+            return null;
+
+        return user.get().getClientInformation();
     }
 
     public void updateClientInformation(Long userId, ClientInformation clientInformation) {
