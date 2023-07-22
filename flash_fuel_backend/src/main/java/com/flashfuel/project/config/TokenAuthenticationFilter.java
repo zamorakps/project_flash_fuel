@@ -15,7 +15,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             String jwtToken = token.substring(7);
-            Map<String, String> userDetails = tokenProvider.getUsernameFromToken(jwtToken);
+            Map<String, String> userDetails = tokenProvider.getUsernameAndUserIdFromToken(jwtToken); // Corrected method name
 
             if (userDetails != null) {
                 request.setAttribute("username", userDetails.get("username"));
