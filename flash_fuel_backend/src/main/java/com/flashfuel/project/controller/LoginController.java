@@ -20,7 +20,7 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody UserCredentialsDTO userCredentials) {
         try {
             return ResponseEntity.ok(
-                    loginService.getUserProfile(userCredentials.getUsername(), userCredentials.getPassword())
+                    loginService.loginAndGetUserProfile(userCredentials.getUsername(), userCredentials.getPassword())
             );
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -1,5 +1,6 @@
 package com.flashfuel.project.controller;
 
+import com.flashfuel.project.config.TokenProvider;
 import com.flashfuel.project.service.ClientInformationService;
 import com.flashfuel.project.model.ClientInformation;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,11 @@ public class ClientInformationController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/profile/update")
-    public ResponseEntity<?> updateClientInformation(@RequestParam Long userId, @RequestBody ClientInformation clientInformation) {
+    public ResponseEntity<?> updateClientInformation(@RequestHeader("Authorization") String authorizationHeader, @RequestBody ClientInformation clientInformation) {
         try {
-            clientInformationService.updateClientInformation(userId, clientInformation);
+            TokenProvider tokenProvider = new TokenProvider();
+            String jwtToken = authorizationHeader.substring(7);
+            clientInformationService.updateClientInformation(tokenProvider.getIdFromToken(jwtToken), clientInformation);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -28,8 +31,10 @@ public class ClientInformationController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/profile")
-    public ResponseEntity<ClientInformation> getClientInformation(@RequestParam Long userId) {
-        return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(userId));
+    public ResponseEntity<ClientInformation> getClientInformation(@RequestHeader("Authorization") String authorizationHeader) {
+        TokenProvider tokenProvider = new TokenProvider();
+        String jwtToken = authorizationHeader.substring(7);
+        return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(tokenProvider.getIdFromToken(jwtToken)));
     }
 }
 

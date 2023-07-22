@@ -10,30 +10,55 @@ const FuelQuoteForm = () => {
   const [totalAmountDue, setTotalAmountDue] = useState("");
   const navigate = useNavigate();
 
-  const loggedUserId = 6;
-
   useEffect(() => {
-    fetch(`http://localhost:8080/api/user/profile?userId=${loggedUserId}`)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        const clientInfo = data;
+    const cookies = document.cookie.split(';').reduce((cookiesObject, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      cookiesObject[name] = value;
+      return cookiesObject;
+    }, {});
+    const bearerToken = cookies.token;
 
-        let fullAddress = `${clientInfo.address}, `;
-        if (clientInfo.addressLine2) {
-          fullAddress += `${clientInfo.addressLine2}, `;
-        }
-        fullAddress += `${clientInfo.city}, ${clientInfo.state}, ${clientInfo.zipCode}`;        
-        
-        const fullUserProfile = {
-          ...data,
-          fullAddress,
-        };
+    if (!bearerToken) {
+      console.error('Token not found in cookies. Please log in first.');
+      return;
+    }
 
-        setUserProfile(fullUserProfile);
-        console.log('User profile:', fullUserProfile);
-      });
+    fetchUserProfile(bearerToken);
   }, []);
+
+  const fetchUserProfile = async (bearerToken) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/user/profile`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log(data);
+      const clientInfo = data;
+
+      let fullAddress = `${clientInfo.address}, `;
+      if (clientInfo.addressLine2) {
+        fullAddress += `${clientInfo.addressLine2}, `;
+      }
+      fullAddress += `${clientInfo.city}, ${clientInfo.state}, ${clientInfo.zipCode}`;        
+        
+      const fullUserProfile = {
+        ...data,
+        fullAddress,
+      };
+
+      setUserProfile(fullUserProfile);
+      console.log('User profile:', fullUserProfile);
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error);
+    }
+  };
 
   useEffect(() => {
     if(gallonsRequested !== "") {
@@ -61,7 +86,6 @@ const FuelQuoteForm = () => {
     console.log('handleSubmit triggered');
 
     const fuelQuoteRequest = {
-      "userId": loggedUserId,
       "gallonsRequested": Number(gallonsRequested),
       "deliveryAddress": userProfile.fullAddress,
       "deliveryDate": deliveryDate,

@@ -2,7 +2,6 @@ import { useMemo, useState, useEffect } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import '../styles/FuelQuoteHistoryPageStyles.css';
 
-const loggedUserId = 6; // Simulated logged-in user ID
 let page = 0;
 
 const FuelQuoteHistoryPage = () => {
@@ -11,13 +10,41 @@ const FuelQuoteHistoryPage = () => {
 
   // Fetch fuel quote history
   useEffect(() => {
-    fetch(`http://localhost:8080/api/fuelquote/history?userId=${loggedUserId}`)
-      .then(response => response.json())
-      .then(data => {
-        setFuelQuoteHistory(data);
-        console.log('Fuel quote history:', data);
-      });
+    // Get the token from the cookies
+    const cookies = document.cookie.split(';').reduce((cookiesObject, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      cookiesObject[name] = value;
+      return cookiesObject;
+    }, {});
+    const bearerToken = cookies.token;
+
+    if (!bearerToken) {
+      console.error('Token not found in cookies. Please log in first.');
+      return;
+    }
+
+    fetchFuelQuoteHistory(bearerToken);
   }, []);
+
+  const fetchFuelQuoteHistory = async (bearerToken) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/fuelquote/history`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setFuelQuoteHistory(data);
+      console.log('Fuel quote history:', data);
+    } catch (error) {
+      console.error('Failed to fetch fuel quote history:', error);
+    }
+  };
 
   const columns = useMemo(
     () => [

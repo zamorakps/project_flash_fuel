@@ -15,13 +15,13 @@ const LoginFormPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     try {
       const credentials = {
         username: username,
         password: password,
       };
-
+  
       const response = await fetch('http://localhost:8080/api/login', {
         method: 'POST',
         headers: {
@@ -29,11 +29,15 @@ const LoginFormPage = () => {
         },
         body: JSON.stringify(credentials),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
-
+  
         if (result.token !== null) {
+          const expirationTime = new Date();
+          expirationTime.setTime(expirationTime.getTime() + 1 * 60 * 60 * 1000); // 1 hour
+          document.cookie = `token=${result.token}; expires=${expirationTime.toUTCString()}; path=/`;
+          
           alert('Logged on');
         } else {
           alert('Username or password is incorrect');
@@ -46,6 +50,7 @@ const LoginFormPage = () => {
       alert('Login failed', error);
     }
   };
+  
 
   return (
     <div className="FormContainer w-1/3">
