@@ -8,15 +8,19 @@ const ProfileManagementPage = () => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
-
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         const userId = 6;
         setUserId(userId);
-        const response = await fetch(`http://localhost:8080/api/profile?userId=${userId}`);
+        const bearerToken = 'eyJzdWIiOiJyYWZleXRlc3RlcjEyMyJ9.FwNvaMlpGkgLbUMskp4j25kVNpkGk8-bmBVuZSIPFj0'; // Replace this with your actual bearer token
+        const response = await fetch(`http://localhost:8080/api/profile?userId=${userId}`, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+  
         if (response.ok) {
-          
           const profileData = await response.json();
           if (profileData) {
             setName(profileData.name || '');
@@ -26,14 +30,17 @@ const ProfileManagementPage = () => {
             setState(profileData.state || '');
             setZipCode(profileData.zipCode || '');
           }
+        } else {
+          console.error('Failed to fetch profile data:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Failed to fetch profile data:', error);
       }
     };
-
+  
     fetchProfileData();
   }, []);
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
