@@ -1,22 +1,26 @@
-package com.flashfuel.project.config;
-
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
+import javax.crypto.Mac;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
-
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 public class TokenProvider {
 
     private static final String SECRET_KEY = "rafey123"; // Replace with a secure secret key
+    private static final String USER_ID = "userId";
+    private static final String USERNAME = "username";
     private static final long TOKEN_VALIDITY_DURATION = 3600000; // 1 hour
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + TOKEN_VALIDITY_DURATION);
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", username);
+        claims.put(USER_ID, userId);
         claims.put("exp", expiryDate.getTime());
 
         String encodedHeaderAndClaims = base64UrlEncode(claims);
@@ -50,7 +54,7 @@ public class TokenProvider {
     private String generateHmacSHA256Signature(String data, String secret) {
         try {
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-            javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
+            Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(secretKey);
 
             byte[] bytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
@@ -60,7 +64,7 @@ public class TokenProvider {
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    public Map<String, String> getUsernameAndUserIdFromToken(String token) {
         try {
             String[] tokenParts = token.split("\\.");
             if (tokenParts.length != 2) {
@@ -78,7 +82,6 @@ public class TokenProvider {
             byte[] decodedBytes = Base64.getUrlDecoder().decode(encodedClaims);
             String decodedToken = new String(decodedBytes, StandardCharsets.UTF_8);
 
-            System.out.println(decodedToken);
             int startOfExpClaim = decodedToken.indexOf("\"exp\":\"");
             if (startOfExpClaim == -1) {
                 throw new RuntimeException("No 'exp' claim found in token");
@@ -107,7 +110,26 @@ public class TokenProvider {
                 throw new RuntimeException("Invalid 'sub' claim format in token");
             }
 
-            return decodedToken.substring(startOfSubClaim, endOfSubClaim);
+            int startOfUserIdClaim = decodedToken.indexOf("\"" + USER_ID + "\":\"");
+            if (startOfUserIdClaim == -1) {
+                throw new RuntimeException("No 'userId' claim found in token");
+            }
+            startOfUserIdClaim += (USER_ID.length() + 3); // The length of USER_ID + 3 for the quotes and colon
+
+            int endOfUserIdClaim = decodedToken.indexOf("\"", startOfUserIdClaim);
+            if (endOfUserIdClaim == -1) {
+                throw new RuntimeException("Invalid 'userId' claim format in token");
+            }
+
+            String username = decodedToken.substring(startOfSubClaim, endOfSubClaim);
+            String userId = decodedToken.substring(startOfUserIdClaim, endOfUserIdClaim);
+            
+            Map<String, String> userDetails = new HashMap<>();
+            userDetails.put(USERNAME, username);
+            userDetails.put(USER_ID, userId);
+
+            return userDetails;
+
         } catch (Exception e) {
             return null; 
         }
