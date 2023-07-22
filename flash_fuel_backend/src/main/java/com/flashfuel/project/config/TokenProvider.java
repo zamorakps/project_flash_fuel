@@ -67,23 +67,31 @@ public class TokenProvider {
                 throw new RuntimeException("Invalid token format");
             }
 
-            byte[] decodedBytes = Base64.getUrlDecoder().decode(tokenParts[0]);
-            String decodedToken = new String(decodedBytes);
+            String encodedClaims = tokenParts[0];
+            String signature = tokenParts[1];
 
-            int startOfExpClaim = decodedToken.indexOf("\"exp\":");
+            String calculatedSignature = generateHmacSHA256Signature(encodedClaims, SECRET_KEY);
+            if (!signature.equals(calculatedSignature)) {
+                throw new RuntimeException("Invalid signature");
+            }
+
+            byte[] decodedBytes = Base64.getUrlDecoder().decode(encodedClaims);
+            String decodedToken = new String(decodedBytes, StandardCharsets.UTF_8);
+
+            System.out.println(decodedToken);
+            int startOfExpClaim = decodedToken.indexOf("\"exp\":\"");
             if (startOfExpClaim == -1) {
                 throw new RuntimeException("No 'exp' claim found in token");
             }
-            startOfExpClaim += 6;
+            startOfExpClaim += 7;
 
-            int endOfExpClaim = decodedToken.indexOf("}", startOfExpClaim);
-            System.out.println(endOfExpClaim);
+            int endOfExpClaim = decodedToken.indexOf("\"", startOfExpClaim);
             if (endOfExpClaim == -1) {
                 throw new RuntimeException("Invalid 'exp' claim format in token");
             }
 
-            long expiryTimeMillis = Long.parseLong(decodedToken.substring(startOfExpClaim, endOfExpClaim - 1));
-            System.out.println(expiryTimeMillis);
+            long expiryTimeMillis = Long.parseLong(decodedToken.substring(startOfExpClaim, endOfExpClaim));
+
             if (System.currentTimeMillis() > expiryTimeMillis) {
                 throw new RuntimeException("Token has expired");
             }
@@ -101,8 +109,7 @@ public class TokenProvider {
 
             return decodedToken.substring(startOfSubClaim, endOfSubClaim);
         } catch (Exception e) {
-            return null;
+            return null; 
         }
     }
-
 }
