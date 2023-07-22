@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
 const ProfileManagementPage = () => {
-  const [userId, setUserId] = useState(null);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
   const [addressLine2, setAddressLine2] = useState('');
@@ -9,78 +8,99 @@ const ProfileManagementPage = () => {
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
   useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const userId = 6;
-        setUserId(userId);
-        const bearerToken = 'eyJzdWIiOiJyYWZleXRlc3RlcjEyMyJ9.FwNvaMlpGkgLbUMskp4j25kVNpkGk8-bmBVuZSIPFj0'; // Replace this with your actual bearer token
-        const response = await fetch(`http://localhost:8080/api/profile?userId=${userId}`, {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
-        });
-  
-        if (response.ok) {
-          const profileData = await response.json();
-          if (profileData) {
-            setName(profileData.name || '');
-            setAddress(profileData.address || '');
-            setAddressLine2(profileData.addressLine2 || '');
-            setCity(profileData.city || '');
-            setState(profileData.state || '');
-            setZipCode(profileData.zipCode || '');
-          }
-        } else {
-          console.error('Failed to fetch profile data:', response.status, response.statusText);
-        }
-      } catch (error) {
-        console.error('Failed to fetch profile data:', error);
-      }
-    };
-  
-    fetchProfileData();
+    const cookies = document.cookie.split(';').reduce((cookiesObject, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      cookiesObject[name] = value;
+      return cookiesObject;
+    }, {});
+    const bearerToken = cookies.token;
+
+    if (!bearerToken) {
+      console.error('Token not found in cookies. Please log in first.');
+      return;
+    }
+
+    fetchProfileData(bearerToken);
   }, []);
+
+  const fetchProfileData = async (bearerToken) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const profileData = await response.json();
+      setName(profileData.name || '');
+      setAddress(profileData.address || '');
+      setAddressLine2(profileData.addressLine2 || '');
+      setCity(profileData.city || '');
+      setState(profileData.state || '');
+      setZipCode(profileData.zipCode || '');
+    } catch (error) {
+      console.error('Failed to fetch profile data:', error);
+    }
+  };
   
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-      const zipCodeValidation = new RegExp("^(F)?\\d{5,}$");
-
-      if(zipCode.length < 5 || !zipCodeValidation.test(zipCode)) {
-        alert("Zip code must be at least 5 digits long");
-      } else {
-        try {
-          const profileData = {
-            name,
-            address,
-            addressLine2,
-            city,
-            state,
-            zipCode,
-          };
-    
-          const response = await fetch(`http://localhost:8080/api/profile/update?userId=${userId}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(profileData),
-          });
-    
-          console.log(response.json());
-          if (response.ok) {
-            alert('Profile update successful');
-          } else {
-            const errorData = await response.json();
-            alert('Profile update failed:', errorData.message);
-          }
-        } catch (error) {
-          alert('Profile update failed:', error);
+  
+    const zipCodeValidation = new RegExp("^(F)?\\d{5,}$");
+  
+    if (zipCode.length < 5 || !zipCodeValidation.test(zipCode)) {
+      alert("Zip code must be at least 5 digits long");
+    } else {
+      try {
+        // Get the token from the cookies
+        const cookies = document.cookie.split(';').reduce((cookiesObject, cookie) => {
+          const [name, value] = cookie.trim().split('=');
+          cookiesObject[name] = value;
+          return cookiesObject;
+        }, {});
+        const bearerToken = cookies.token;
+  
+        if (!bearerToken) {
+          console.error('Token not found in cookies. Please log in first.');
+          return;
         }
+  
+        const profileData = {
+          name,
+          address,
+          addressLine2,
+          city,
+          state,
+          zipCode,
+        };
+  
+        const response = await fetch(`http://localhost:8080/api/profile/update`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${bearerToken}`, // Include the bearer token in the headers
+          },
+          body: JSON.stringify(profileData),
+        });
+  
+        console.log(response.json());
+        if (response.ok) {
+          alert('Profile update successful');
+        } else {
+          const errorData = await response.json();
+          alert('Profile update failed:', errorData.message);
+        }
+      } catch (error) {
+        alert('Profile update failed:', error);
       }
+    }
   };
-
+  
   return (
     <div className="FormContainer w-1/3 mb-6">
       <h1 className="FormTitle">Profile Management</h1>

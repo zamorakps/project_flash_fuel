@@ -1,6 +1,7 @@
 
 package com.flashfuel.project.controller;
 
+import com.flashfuel.project.config.TokenProvider;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.FuelQuote;
 import com.flashfuel.project.model.FuelQuoteDTO;
@@ -49,14 +50,18 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/fuelquote/history")
-    public ResponseEntity<List<FuelQuote>> getFuelQuoteHistory(@RequestParam Long userId) {
-        return ResponseEntity.ok(fuelQuoteService.getFuelQuotesByUserId(userId));
+    public ResponseEntity<List<FuelQuote>> getFuelQuoteHistory(@RequestHeader("Authorization") String authorizationHeader) {
+        TokenProvider tokenProvider = new TokenProvider();
+        String jwtToken = authorizationHeader.substring(7);
+        return ResponseEntity.ok(fuelQuoteService.getFuelQuotesByUserId(tokenProvider.getIdFromToken(jwtToken)));
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/user/profile")
-    public ResponseEntity<ClientInformation> getUserProfile(@RequestParam Long userId) {
-        return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(userId));
+    public ResponseEntity<ClientInformation> getUserProfile(@RequestHeader("Authorization") String authorizationHeader) {
+        TokenProvider tokenProvider = new TokenProvider();
+        String jwtToken = authorizationHeader.substring(7);
+        return ResponseEntity.ok(clientInformationService.getClientInformationByUserId(tokenProvider.getIdFromToken(jwtToken)));
     }
 }
 

@@ -23,7 +23,7 @@ public class LoginService {
     public Map<String, Object> loginAndGetUserProfile(String username, String password) {
         if (userManager.isValidCredentials(username, password)) {
             UserCredentials userCredentials = userManager.getUserByUsername(username);
-            String token = tokenProvider.generateToken(userCredentials.getUsername());
+            String token = tokenProvider.generateToken(userCredentials.getUsername(), userCredentials.getId());
 
             System.out.println(token);
             Map<String, Object> response = new HashMap<>();
