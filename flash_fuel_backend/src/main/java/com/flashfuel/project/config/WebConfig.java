@@ -50,7 +50,8 @@ public class WebConfig implements WebMvcConfigurer {
     public FilterRegistrationBean<TokenAuthenticationFilter> tokenFilter(TokenProvider tokenProvider) {
         FilterRegistrationBean<TokenAuthenticationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new TokenAuthenticationFilter(tokenProvider));
-        registrationBean.addUrlPatterns("/api/profile", "/api/profile/update", "/api/fuelquote/calculate", "/api/fuelquote/new", "/api/fuelquote/history", "/api/user/profile");
+        //registrationBean.addUrlPatterns("/api/profile", "/api/profile/update", "/api/fuelquote/calculate", "/api/fuelquote/new", "/api/fuelquote/history", "/api/user/profile");
+        registrationBean.addUrlPatterns("/api/profile", "/api/profile/update", "/api/fuelquote/new", "/api/fuelquote/history", "/api/user/profile");
         return registrationBean;
     }
 }
