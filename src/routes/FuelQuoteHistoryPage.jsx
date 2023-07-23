@@ -39,8 +39,26 @@ const FuelQuoteHistoryPage = () => {
       }
 
       const data = await response.json();
-      setFuelQuoteHistory(data);
-      console.log('Fuel quote history:', data);
+      const formattedData = data.map(entry => {
+        let { deliveryAddress, ...rest } = entry;
+        let [address, addressLine2, city, state, zipCode] = deliveryAddress.split(', ');
+
+        let fullAddress = `${address}, `;
+        if (addressLine2) {
+          fullAddress += `${addressLine2}, `;
+        }
+        fullAddress += `${city}, ${state}, ${zipCode}`;
+
+        return {
+          ...rest,
+          deliveryAddress: fullAddress,
+        };
+      });
+      setFuelQuoteHistory(formattedData);
+
+      //setFuelQuoteHistory(data);
+      //console.log('Fuel quote history:', data);
+      console.log('Fuel quote history:', formattedData);
     } catch (error) {
       console.error('Failed to fetch fuel quote history:', error);
     }
@@ -55,6 +73,7 @@ const FuelQuoteHistoryPage = () => {
       {
         Header: 'Delivery Address',
         accessor: 'deliveryAddress',
+        //accessor: 'fullAddress',
       },
       {
         Header: 'Delivery Date',
