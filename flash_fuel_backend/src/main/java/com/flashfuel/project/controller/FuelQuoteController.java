@@ -35,6 +35,7 @@ public class FuelQuoteController {
         return ResponseEntity.ok(response);
     }
 
+    /*
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/new")
     public ResponseEntity<?> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote) {
@@ -47,6 +48,22 @@ public class FuelQuoteController {
             return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
         }
     }
+    */
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/fuelquote/new")
+    public ResponseEntity<?> addFuelQuote(@RequestHeader("Authorization") String authorizationHeader, @RequestBody FuelQuoteDTO fuelQuote) {
+        try {
+            TokenProvider tokenProvider = new TokenProvider();
+            String jwtToken = authorizationHeader.substring(7);
+            fuelQuoteService.addFuelQuote(tokenProvider.getIdFromToken(jwtToken), fuelQuote);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Fuel quote added successfully.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
+        }
+    }    
 
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/fuelquote/history")
