@@ -68,7 +68,7 @@ const headerLinks = Object.values(groupedRoutes).map((group) => {
       <NavigationMenu.Link
         key={route.path}
         onClick={() => router.navigate(route.path)}
-        class={linkClass}
+        className={linkClass}
       >
         {route.title}
       </NavigationMenu.Link>
@@ -80,8 +80,8 @@ const headerLinks = Object.values(groupedRoutes).map((group) => {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <div className='SiteContainer h-screen flex flex-col justify-start items-center bg-gradient-to-r from-rose-400 to-orange-300'>
-    <NavigationMenu.Root class="nav-root">
-      <NavigationMenu.List class="nav-menu">
+    <NavigationMenu.Root className="nav-root">
+      <NavigationMenu.List className="nav-menu">
         {headerLinks}
       </NavigationMenu.List>
     </NavigationMenu.Root>

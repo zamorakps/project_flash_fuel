@@ -27,6 +27,7 @@ const ProfileManagementPage = () => {
     try {
       const response = await fetch(`http://localhost:8080/api/profile`, {
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${bearerToken}`,
         },
       });
