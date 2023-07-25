@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import '../styles/Main.css';
 
 const RegistrationFormPage = () => {
   const [username, setUsername] = useState('');

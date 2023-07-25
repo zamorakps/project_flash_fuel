@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import '../styles/Main.css';
 
 const ProfileManagementPage = () => {
   const [name, setName] = useState('');
