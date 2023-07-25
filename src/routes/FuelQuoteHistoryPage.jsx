@@ -1,6 +1,8 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import '../styles/FuelQuoteHistoryPageStyles.css';
+import '../styles/Main.css';
+
 
 let page = 0;
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/FuelQuoteFormPageStyles.css'
+import '../styles/Main.css';
 
 const FuelQuoteForm = () => {
   const [userProfile, setUserProfile] = useState({});

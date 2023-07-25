@@ -1,0 +1,47 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.title {
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    color: #532020;
+    font-weight: 700;
+}
+
+.description {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.login-text {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: underline;
+    color: #743434;
+    font-weight: 700;
+}
+
+.new-member {
+    text-decoration: underline;
+    color: #743434;
+}
+
+.btnLogin, .btnProfile {
+    background-color: #532020c7;
+    box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.16) 0px 2px 3px 0px, rgba(242, 242, 242, 0.16) 0px 1px 2px 0px inset, rgba(0, 0, 0, 0.2) 0px -1px 2px 0px inset;
+    color: white;
+    padding: 10px 20px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-transform: uppercase;
+}

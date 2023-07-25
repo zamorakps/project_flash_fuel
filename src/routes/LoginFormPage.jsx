@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/Main.css';
 
 const LoginFormPage = () => {
   const [username, setUsername] = useState('');
@@ -38,7 +39,7 @@ const LoginFormPage = () => {
           expirationTime.setTime(expirationTime.getTime() + 1 * 60 * 60 * 1000); // 1 hour
           document.cookie = `token=${result.token}; expires=${expirationTime.toUTCString()}; path=/`;
           
-          alert('Logged on');
+          location.href='../profile'
         } else {
           alert('Username or password is incorrect');
         }
@@ -95,7 +96,7 @@ const LoginFormPage = () => {
 
       <div className="NotAMember">
         Not a member?{' '}
-        <Link to="/RegistrationForm">Register here</Link>
+        <Link to="/registration" className='new-member'>Register here</Link>
       </div>
     </div>
   );

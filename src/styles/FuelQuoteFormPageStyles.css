@@ -1,19 +1,6 @@
 @import '@radix-ui/colors/black-alpha.css';
 @import '@radix-ui/colors/violet.css';
 @import '@radix-ui/colors/mauve.css';
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind variants;
-*/
-
-/* reset */
-input,
-textarea,
-button {
-    all: unset;
-    box-sizing: border-box;
-}
 
 .FormRoot {
     padding: 30px 35px;
@@ -43,7 +30,6 @@ button {
 }
 
 .FormTitle {
-    font-family: 'Kanit', sans-serif;
     color: white;
     font-size: 50px;
     text-align: center;
@@ -53,7 +39,6 @@ button {
 
 .FormLabel {
     font-weight: 200;
-    font-family: 'Kanit', sans-serif;
 }
 
 /* 
