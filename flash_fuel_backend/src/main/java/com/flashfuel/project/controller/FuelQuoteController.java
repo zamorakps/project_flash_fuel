@@ -5,6 +5,7 @@ import com.flashfuel.project.config.TokenProvider;
 import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.FuelQuote;
 import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.PricingEstimation;
 import com.flashfuel.project.service.ClientInformationService;
 import com.flashfuel.project.service.FuelQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,23 +31,19 @@ public class FuelQuoteController {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/fuelquote/calculate")
-    public ResponseEntity<FuelQuoteDTO> calculatePrices(@RequestBody Map<String, String> requestBody) {
-        FuelQuoteDTO response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"));
+    public ResponseEntity<PricingEstimation> calculatePrices(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Map<String, String> requestBody) {
+        TokenProvider tokenProvider = new TokenProvider();
+        String jwtToken = authorizationHeader.substring(7);
+        PricingEstimation response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"),requestBody.get("clientState"),tokenProvider.getIdFromToken(jwtToken));
         return ResponseEntity.ok(response);
     }
 
     /*
     @CrossOrigin(origins = "http://localhost:3000")
-    @PostMapping("/fuelquote/new")
-    public ResponseEntity<?> addFuelQuote(@RequestBody FuelQuoteDTO fuelQuote) {
-        try {
-            fuelQuoteService.addFuelQuote(fuelQuote.getUserId(), fuelQuote);
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Fuel quote added successfully.");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Fuel quote not added: " + e.getMessage());
-        }
+    @PostMapping("/fuelquote/calculate")
+    public ResponseEntity<FuelQuoteDTO> calculatePrices(@RequestBody Map<String, String> requestBody) {
+        FuelQuoteDTO response = fuelQuoteService.calculatePrices(requestBody.get("gallonsRequested"));
+        return ResponseEntity.ok(response);
     }
     */
 

@@ -6,6 +6,7 @@ import '../styles/Main.css';
 const FuelQuoteForm = () => {
   const [userProfile, setUserProfile] = useState({});
   const [gallonsRequested, setGallonsRequested] = useState("");
+  const [clientState, setClientState] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [suggestedPrice, setSuggestedPrice] = useState("");
   const [totalAmountDue, setTotalAmountDue] = useState("");
@@ -58,33 +59,49 @@ const FuelQuoteForm = () => {
         fullAddress,
       };
 
+      let tempState = `${clientInfo.state}`;
+
       setUserProfile(fullUserProfile);
+      setClientState(tempState);
       console.log('User profile:', fullUserProfile);
+      console.log('Client state:', tempState);
     } catch (error) {
       console.error('Failed to fetch user profile:', error);
     }
   };
 
   useEffect(() => {
+    /*added the below block*/
+    const bearerToken = getBearerToken();
+  
+    if (!bearerToken) {
+      console.error('Token not found in cookies. Please log in first.');
+      return;
+    }
+    /*end of added block*/
+
     if(gallonsRequested !== "") {
       fetch("http://localhost:8080/api/fuelquote/calculate", {
         method: "POST",
-        body: JSON.stringify({"gallonsRequested": gallonsRequested}),
+        body: JSON.stringify({"gallonsRequested": gallonsRequested},{"clientState": clientState}),
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${bearerToken}`,
         }
       })
       .then(response => response.json())
       .then(data => {
         console.log('Calculated prices:', data);
-        setSuggestedPrice(data.suggestedPrice);
-        setTotalAmountDue(data.totalAmountDue);
+        // setSuggestedPrice(data.suggestedPrice);
+        // setTotalAmountDue(data.totalAmountDue);
+        setSuggestedPrice(data.suggestedPricePerGallon);
+        setTotalAmountDue(data.totalPrice);
       })
       .catch(error => {
         console.log('There was a problem with the calculation request:', error);
       });
     }
-  }, [gallonsRequested]);
+  }, [clientState, gallonsRequested]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -123,7 +140,7 @@ const FuelQuoteForm = () => {
     })
     .then(data => {
       console.log('Fuel quote added:', data);
-      navigate('/FuelQuoteHistory');
+      navigate('/fuelquotehistory');
     })
     .catch(error => {
       console.log('There was a problem with the request:', error);

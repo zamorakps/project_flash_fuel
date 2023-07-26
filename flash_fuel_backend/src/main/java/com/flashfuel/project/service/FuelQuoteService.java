@@ -14,6 +14,7 @@ import com.flashfuel.project.model.ClientInformation;
 import com.flashfuel.project.model.ClientInformationDTO;
 import com.flashfuel.project.model.FuelQuote;
 import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.PricingEstimation;
 import com.flashfuel.project.model.UserCredentials;
 import com.flashfuel.project.model.UserCredentialsDTO;
 
@@ -39,6 +40,47 @@ public class FuelQuoteService {
         return fuelQuoteManager.getFuelQuotesByUserId(userId);
     }
 
+    public PricingEstimation calculatePrices(String gallonsRequestedStr, String state, Long userId) {
+    //Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
+    // Double suggestedPrice = 2.0;
+    // Double totalAmountDue = suggestedPrice * gallonsRequested;
+    //Double gallonsReq = Double.valueOf(gallonsRequested);
+    Double gallonsRequested = Double.parseDouble(gallonsRequestedStr);
+
+    Double currentPricePerGallon = 1.50;
+
+    Double locationFactor = 0.0;
+    if (state=="TX")
+        locationFactor = 0.02;
+    else
+        locationFactor = 0.04;
+
+    Double rateHistoryFactor = 0.0;
+    if (getFuelQuotesByUserId(userId) != null)
+        rateHistoryFactor = 0.01;
+
+    Double gallonsRequestedFactor = 0.0;
+    if (gallonsRequested < 1000)
+        gallonsRequestedFactor = 0.03;
+    else
+        gallonsRequestedFactor = 0.02;
+    
+    Double companyProfitMargin = 0.10;
+
+    Double margin = currentPricePerGallon * (locationFactor - rateHistoryFactor + gallonsRequestedFactor + companyProfitMargin);
+
+    Double suggestedPrice = currentPricePerGallon + margin;
+
+    Double totalAmountDue = gallonsRequested * suggestedPrice;
+
+    PricingEstimation response = new PricingEstimation();
+    response.setSuggestedPricePerGallon(suggestedPrice);
+    response.setTotalPrice(totalAmountDue);
+
+    return response;
+}
+
+/*
 public FuelQuoteDTO calculatePrices(String gallonsRequestedStr) {
     Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
     Double suggestedPrice = 2.0;
@@ -51,6 +93,7 @@ public FuelQuoteDTO calculatePrices(String gallonsRequestedStr) {
 
     return response;
 }
+*/
 
 public void addFuelQuote(Long userId, FuelQuoteDTO fuelQuoteDto) {
     ClientInformation clientInfo = clientInformationService.getClientInformationByUserId(userId);
