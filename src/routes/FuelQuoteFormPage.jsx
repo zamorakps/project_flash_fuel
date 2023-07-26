@@ -123,7 +123,7 @@ const FuelQuoteForm = () => {
     })
     .then(data => {
       console.log('Fuel quote added:', data);
-      navigate('/FuelQuoteHistory');
+      navigate('/fuelquotehistory');
     })
     .catch(error => {
       console.log('There was a problem with the request:', error);
