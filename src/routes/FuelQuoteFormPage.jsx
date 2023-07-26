@@ -83,7 +83,7 @@ const FuelQuoteForm = () => {
     if(gallonsRequested !== "") {
       fetch("http://localhost:8080/api/fuelquote/calculate", {
         method: "POST",
-        body: JSON.stringify({"gallonsRequested": gallonsRequested},{"clientState": clientState}),
+        body: JSON.stringify({"gallonsRequested": gallonsRequested, "clientState": clientState}),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${bearerToken}`,
