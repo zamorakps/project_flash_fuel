@@ -44,13 +44,12 @@ public class FuelQuoteService {
     //Integer gallonsRequested = Integer.parseInt(gallonsRequestedStr);
     // Double suggestedPrice = 2.0;
     // Double totalAmountDue = suggestedPrice * gallonsRequested;
-    //Double gallonsReq = Double.valueOf(gallonsRequested);
     Double gallonsRequested = Double.parseDouble(gallonsRequestedStr);
 
     Double currentPricePerGallon = 1.50;
 
     Double locationFactor = 0.0;
-    if (state=="TX")
+    if (state.equals("TX"))
         locationFactor = 0.02;
     else
         locationFactor = 0.04;
