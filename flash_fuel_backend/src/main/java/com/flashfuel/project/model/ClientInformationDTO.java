@@ -67,16 +67,3 @@ public class ClientInformationDTO {
         this.zipCode = zipCode;
     }
 }
-
-
-/*
-private UserCredentialsDTO userCredentials;
-
-    public UserCredentialsDTO getUserCredentials() {
-        return userCredentials;
-    }
-
-    public void setUserCredentials(UserCredentialsDTO userCredentials) {
-        this.userCredentials = userCredentials;
-    }
-     */
