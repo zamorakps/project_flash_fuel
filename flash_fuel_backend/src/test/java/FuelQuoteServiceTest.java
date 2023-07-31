@@ -1,89 +1,103 @@
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.junit.jupiter.api.extension.ExtendWith;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
-// import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-// import com.flashfuel.project.FuelQuoteManager;
-// import com.flashfuel.project.UserManager;
-// import com.flashfuel.project.model.ClientInformation;
-// import com.flashfuel.project.model.FuelQuote;
-// import com.flashfuel.project.model.FuelQuoteDTO;
-// import com.flashfuel.project.model.UserCredentials;
-// import com.flashfuel.project.service.ClientInformationService;
-// import com.flashfuel.project.service.FuelQuoteService;
+import com.flashfuel.project.FuelQuoteManager;
+import com.flashfuel.project.ProjectApplication;
+import com.flashfuel.project.UserManager;
+import com.flashfuel.project.model.ClientInformation;
+import com.flashfuel.project.model.FuelQuote;
+import com.flashfuel.project.model.FuelQuoteDTO;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.ClientInformationService;
+import com.flashfuel.project.service.FuelQuoteService;
 
-// import java.util.Collections;
+import java.util.ArrayList;
 
-// import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.ArgumentMatchers.*;
-// import static org.mockito.Mockito.*;
+import java.time.LocalDate;
+import java.util.List;
 
-// import java.time.LocalDate;
-// import java.util.List;
+@SpringBootTest(classes = ProjectApplication.class)
+@AutoConfigureTestDatabase(replace = Replace.ANY)
+public class FuelQuoteServiceTest {
 
-// @ExtendWith(MockitoExtension.class)
-// public class FuelQuoteServiceTest {
+    @MockBean
+    private FuelQuoteManager fuelQuoteManager;
+    @MockBean
+    private ClientInformationService clientInformationService;
+    @MockBean
+    private UserManager userManager;
 
-//     @InjectMocks
-//     private FuelQuoteService fuelQuoteService;
+    private FuelQuoteService fuelQuoteService;
 
-//     @Mock
-//     private FuelQuoteManager fuelQuoteManager;
+    @BeforeEach
+    public void setup() {
+        fuelQuoteService = new FuelQuoteService(fuelQuoteManager, clientInformationService, userManager);
+    }
 
-//     @Mock
-//     private UserManager userManager;
+    @Test
+    public void getFuelQuotesByUserIdTest() {
+        // given
+        Long userId = 1L;
+        List<FuelQuote> quotes = new ArrayList<>();
 
-//     @Mock
-//     private ClientInformationService clientInformationService;
+        when(fuelQuoteManager.getFuelQuotesByUserId(userId)).thenReturn(quotes);
 
-//     @BeforeEach
-//     public void setup() {
-//         MockitoAnnotations.openMocks(this);
-//     }
+        // when
+        List<FuelQuote> found = fuelQuoteService.getFuelQuotesByUserId(userId);
 
-//     @Test
-//     public void getFuelQuotesByUserIdTest() {
-//         // given
-//         Long userId = 1L;
-//         FuelQuote fuelQuote = new FuelQuote();
+        // then
+        assertIterableEquals(quotes, found);
+    }
+
+    @Test
+    public void addFuelQuoteTest() {
+        // given
+        Long userId = 1L;
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(2000);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().plusDays(10));
+        fuelQuoteDTO.setSuggestedPrice(2.5);
+        fuelQuoteDTO.setTotalAmountDue(5000.0);
+
+        ClientInformation clientInformation = new ClientInformation();
+        UserCredentials user = new UserCredentials();
+        user.setId(userId);
         
-//         when(fuelQuoteManager.getFuelQuotesByUserId(userId)).thenReturn(Collections.singletonList(fuelQuote));
+        when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(clientInformation);
+        when(userManager.getUserById(userId)).thenReturn(user);
 
-//         // when
-//         var found = fuelQuoteService.getFuelQuotesByUserId(userId);
+        // when
+        fuelQuoteService.addFuelQuote(userId, fuelQuoteDTO);
 
-//         // then
-//         assertFalse(found.isEmpty());
-//         assertEquals(fuelQuote, found.get(0));
-//     }
+        // then
+        verify(fuelQuoteManager, times(1)).addFuelQuote(any(UserCredentials.class), any(FuelQuote.class));
+    }
 
-//     @Test
-//     public void addFuelQuoteTest() {
-//         // given
-//         Long userId = 1L;
-//         FuelQuoteDTO fuelQuoteDto = new FuelQuoteDTO();
-//         fuelQuoteDto.setGallonsRequested(500);
-//         fuelQuoteDto.setDeliveryDate(LocalDate.now());
-//         fuelQuoteDto.setSuggestedPrice(2.0);
-//         fuelQuoteDto.setTotalAmountDue(1000.0);
-
-//         UserCredentials user = new UserCredentials();
-//         user.setId(userId);
-//         ClientInformation clientInformation = new ClientInformation();
-
-//         when(userManager.getUserById(userId)).thenReturn(user);
-//         when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(clientInformation);
-//         doNothing().when(fuelQuoteManager).addFuelQuote(user, any());
-
-//         // when
-//         fuelQuoteService.addFuelQuote(userId, fuelQuoteDto);
-
-//         // then
-//         verify(fuelQuoteManager, times(1)).addFuelQuote(user, any());
-//     }
-// }
+    @Test
+    public void validateFuelQuoteTest() {
+        // given
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(-10);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().minusDays(5));
+        fuelQuoteDTO.setSuggestedPrice(-2.5);
+        fuelQuoteDTO.setTotalAmountDue(-100.0);
+    
+        // when
+        String errors = fuelQuoteService.validateFuelQuote(fuelQuoteDTO);
+    
+        // then
+        assertNotNull(errors); // This assertion checks if the errors string is not null
+        assertTrue(errors.contains("Gallons requested must be greater than 0."));
+        assertTrue(errors.contains("Delivery date must be today's date or in the future."));
+        assertTrue(errors.contains("Suggested price cannot be null or negative."));
+        assertTrue(errors.contains("Total amount due cannot be null or negative."));
+    }    
+}

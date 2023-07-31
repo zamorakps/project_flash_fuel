@@ -73,4 +73,27 @@ public class ClientInformationServiceTest {
         // then
         assertNull(errors);
     }    
+
+    @Test
+    public void getUpdateProfileErrorsTest() {
+        // given
+        ClientInformation clientInformation = new ClientInformation();
+        // Set the fields to null to test error handling
+        clientInformation.setName(null);
+        clientInformation.setAddress(null);
+        clientInformation.setCity(null);
+        clientInformation.setState(null);
+        clientInformation.setZipCode(null);
+        
+        // when
+        String errors = clientInformationService.getUpdateProfileErrors(clientInformation);
+
+        // then
+        assertNotNull(errors); // This assertion checks if the errors string is not null
+        assertTrue(errors.contains("Name is required")); // This checks if the correct error message was returned
+        assertTrue(errors.contains("Address is required"));
+        assertTrue(errors.contains("City is required"));
+        assertTrue(errors.contains("State is required"));
+        assertTrue(errors.contains("Zip Code is required"));
+    }
 }
