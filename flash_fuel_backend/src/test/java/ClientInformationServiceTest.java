@@ -1,93 +1,76 @@
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-// import com.flashfuel.project.ClientInformationManager;
-// import com.flashfuel.project.UserManager;
-// import com.flashfuel.project.model.ClientInformation;
-// import com.flashfuel.project.model.ClientInformationDTO;
-// import com.flashfuel.project.model.UserCredentials;
-// import com.flashfuel.project.service.ClientInformationService;
+import com.flashfuel.project.ClientInformationManager;
+import com.flashfuel.project.ClientInformationRepository;
+import com.flashfuel.project.UserCredentialsRepository;
+import com.flashfuel.project.model.ClientInformation;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.ClientInformationService;
 
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-// public class ClientInformationServiceTest {
+import java.util.Optional;
 
-//     private ClientInformationService clientInformationService;
+public class ClientInformationServiceTest {
 
-//     @Mock
-//     private ClientInformationManager clientInformationManager;
+    @InjectMocks
+    private ClientInformationService clientInformationService;
 
-//     @Mock
-//     private UserManager userManager;
+    @Mock
+    private ClientInformationManager clientInformationManager;
 
-//     @BeforeEach
-//     public void setUp() {
-//         MockitoAnnotations.initMocks(this);
-//         clientInformationService = new ClientInformationService(clientInformationManager);
-//     }
+    @Mock
+    private ClientInformationRepository clientInformationRepository;
 
-//     @Test
-//     public void testGetProfile_ValidCredentials_ReturnsUser() {
-//         ClientInformation clientInfo = new ClientInformation("John Doe", "123 Street", "Apt 4B", "New York", "NY", "10001");
-//         UserCredentials userCredentials = new UserCredentials("johnDoe", "password123", clientInfo);
-//         Long userId = 1L;
-//         when(userManager.getUserById(userId)).thenReturn(userCredentials);
-//         when(clientInformationManager.getClientInformationByUserId(userId)).thenReturn(clientInfo);
+    @Mock
+    private UserCredentialsRepository userCredentialsRepository;
 
-//         ClientInformation result = clientInformationService.getClientInformationByUserId(userId);
-//         assertNotNull(result);
-//         assertEquals("John Doe", result.getName());
-//     }
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-//     @Test
-//     public void testGetProfile_InvalidCredentials_ReturnsNull() {
-//         Long userId = 1L;
-//         when(userManager.getUserById(userId)).thenReturn(null);
+    @Test
+    public void getClientInformationByUserIdTest() {
+        // given
+        Long userId = 1L;
+        ClientInformation clientInformation = new ClientInformation();
+        
+        when(clientInformationManager.getClientInformationByUserId(userId)).thenReturn(clientInformation);
 
-//         ClientInformation result = clientInformationService.getClientInformationByUserId(userId);
-//         assertNull(result);
-//     }
+        // when
+        ClientInformation found = clientInformationService.getClientInformationByUserId(userId);
 
-//     @Test
-//     public void testGetProfile_UserNotRegistered_ReturnsNull() {
-//         Long userId = 1L;
-//         when(clientInformationManager.getClientInformationByUserId(userId)).thenReturn(null);
+        // then
+        assertEquals(clientInformation, found);
+    }
 
-//         ClientInformation result = clientInformationService.getClientInformationByUserId(userId);
-//         assertNull(result);
-//     }
-
-//     @Test
-//     public void testUpdateClientInformation() {
-//         ClientInformation clientInfo = new ClientInformation("John Doe", "123 Street", "Apt 4B", "New York", "NY", "10001");
-//         Long userId = 1L;
-//         when(clientInformationManager.getClientInformationByUserId(userId)).thenReturn(clientInfo);
-
-//         // Valid information
-//         ClientInformation updateInfo = new ClientInformation("Jane Doe", "456 Avenue", "Apt 3C", "Los Angeles", "CA", "90001");
-//         clientInformationService.updateClientInformation(userId, updateInfo);
-
-//         verify(clientInformationManager, times(1)).updateClientInformation(userId, updateInfo);
-//     }
-
-//     @Test
-//     public void testGetUpdateProfileErrors() {
-//         ClientInformationDTO badInfo = new ClientInformationDTO();
-//         badInfo.setName("");
-//         badInfo.setAddress("");
-//         badInfo.setCity("");
-//         badInfo.setState("");
-//         badInfo.setZipCode("1234");
-
-//         String errors = clientInformationService.getUpdateProfileErrors(badInfo);
-//         assertNotNull(errors);
-//         assertTrue(errors.contains("Name is required."));
-//         assertTrue(errors.contains("Address is required."));
-//         assertTrue(errors.contains("City is required."));
-//         assertTrue(errors.contains("State is required."));
-//         assertTrue(errors.contains("Invalid Zip Code format."));
-//     }
-// }
+    @Test
+    public void updateClientInformationTest() {
+        // given
+        Long userId = 1L;
+        UserCredentials user = new UserCredentials();
+        user.setId(userId);
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName("Test Name");
+        clientInformation.setAddress("Test Address");
+        clientInformation.setCity("Test City");
+        clientInformation.setState("Test State");
+        clientInformation.setZipCode("12345");
+        user.setClientInformation(clientInformation);
+        
+        when(userCredentialsRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(clientInformationRepository.save(any(ClientInformation.class))).thenReturn(clientInformation);
+    
+        // when
+        String errors = clientInformationService.updateClientInformation(userId, clientInformation);
+    
+        // then
+        assertNull(errors);
+    }    
+}
