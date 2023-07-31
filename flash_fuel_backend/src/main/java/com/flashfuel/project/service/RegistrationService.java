@@ -1,6 +1,5 @@
 package com.flashfuel.project.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.flashfuel.project.UserManager;
@@ -17,7 +16,6 @@ public class RegistrationService {
         this.userManager = userManager;
     }
 
-    /*added mapping below */
     public ClientInformation toClientInformation(ClientInformationDTO dto) {
         ClientInformation clientInformation = new ClientInformation();
         clientInformation.setId(dto.getId());
@@ -43,9 +41,6 @@ public class RegistrationService {
         }
         ClientInformation clientInformation = toClientInformation(clientInformationDTO);
         UserCredentials newUser = new UserCredentials(username, password, clientInformation);
-        //long newUserId = userManager.generateNewUserId();
-        // long newUserId = 1;
-        //newUser.setId(newUserId);
         userManager.registerUser(newUser);
     }
     

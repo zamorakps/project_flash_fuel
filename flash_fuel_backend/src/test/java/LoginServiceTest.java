@@ -1,66 +1,58 @@
-// import static org.junit.jupiter.api.Assertions.*;
-// import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.MockitoAnnotations;
+import com.flashfuel.project.UserManager;
+import com.flashfuel.project.config.TokenProvider;
+import com.flashfuel.project.model.UserCredentials;
+import com.flashfuel.project.service.LoginService;
 
-// import com.flashfuel.project.UserManager;
-// import com.flashfuel.project.model.ClientInformation;
-// import com.flashfuel.project.model.UserCredentials;
-// import com.flashfuel.project.service.LoginService;
+import java.util.Map;
 
-// public class LoginServiceTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
-//     @Mock
-//     private UserManager userManager;
+public class LoginServiceTest {
 
-//     @InjectMocks
-//     private LoginService loginService;
+    @InjectMocks
+    private LoginService loginService;
 
-//     private UserCredentials validUser;
-//     private UserCredentials invalidUser;
+    @Mock
+    private UserManager userManager;
 
-//     @BeforeEach
-//     public void setUp() {
-//         MockitoAnnotations.initMocks(this);
+    @Mock
+    private TokenProvider tokenProvider;
 
-//         validUser = new UserCredentials("ValidUsername", "ValidPassword", new ClientInformation());
-//         invalidUser = new UserCredentials("InvalidUsername", "InvalidPassword", new ClientInformation());
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-//         when(userManager.getUserByUsername("ValidUsername")).thenReturn(validUser);
-//         when(userManager.getUserByUsername("InvalidUsername")).thenReturn(null);
-//         when(userManager.isValidCredentials("ValidUsername", "ValidPassword")).thenReturn(true);
-//         when(userManager.isValidCredentials("InvalidUsername", "InvalidPassword")).thenReturn(false);
-//     }
+    @Test
+    public void loginAndGetUserProfileTest() {
+        String username = "test";
+        String password = "password";
+        Long id = 1L; // or some other non-null value that is appropriate for your use case
 
-//     @Test
-//     public void testGetProfile_ValidCredentials_ReturnsUser() {
-//         UserCredentials result = loginService.getUserProfile("ValidUsername", "ValidPassword");
-//         assertNotNull(result);
-//         assertEquals("ValidUsername", result.getUsername());
-//     }
+        UserCredentials user = new UserCredentials();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setId(id); // Set the ID here
 
-//     @Test
-//     public void testGetProfile_InvalidCredentials_ReturnsNull() {
-//         assertThrows(RuntimeException.class, () -> {
-//             loginService.getUserProfile("InvalidUsername", "InvalidPassword");
-//         });
-//     }
+        when(userManager.isValidCredentials(any(), any())).thenReturn(true);
+        when(userManager.getUserByUsername(any())).thenReturn(user);
+        when(tokenProvider.generateToken(anyString(), anyLong())).thenReturn("token");
 
-//     @Test
-//     public void testGetProfile_UserNotRegistered_ReturnsNull() {
-//         assertThrows(RuntimeException.class, () -> {
-//             loginService.getUserProfile("NonExistentUsername", "NonExistentPassword");
-//         });
-//     }
+        Map<String, Object> result = loginService.loginAndGetUserProfile(username, password);
 
-//     @Test
-//     public void testGenerateAuthToken_ReturnsNonEmptyToken() {
-//         String token = loginService.generateAuthToken();
-//         assertNotNull(token);
-//         assertFalse(token.isEmpty());
-//     }
-// }
+        verify(userManager, times(1)).isValidCredentials(username, password);
+        verify(userManager, times(1)).getUserByUsername(username);
+        verify(tokenProvider, times(1)).generateToken(anyString(), anyLong());
+
+        assert result.get("userProfile").equals(user);
+        assert result.get("token").equals("token");
+    }
+}
