@@ -63,7 +63,7 @@ const RegistrationFormPage = () => {
 
         if (result === "User registration successful.") {
             alert('Registration successful, you may log in now');
-            window.location.href = '/LoginForm';
+            window.location.href = '/login';
         } else {
             setErrorMessage(result);
         }
