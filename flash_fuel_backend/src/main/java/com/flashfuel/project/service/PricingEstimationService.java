@@ -19,7 +19,7 @@ public class PricingEstimationService {
         Double currentPricePerGallon = 1.50;
 
         Double locationFactor = 0.0;
-        if (state.equals("TX"))
+        if (state.equals("TX") || state.equals("Texas")
             locationFactor = 0.02;
         else
             locationFactor = 0.04;
