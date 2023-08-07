@@ -10,6 +10,7 @@ import com.flashfuel.project.service.LoginService;
 
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -54,5 +55,19 @@ public class LoginServiceTest {
 
         assert result.get("userProfile").equals(user);
         assert result.get("token").equals("token");
+    }
+
+    @Test
+    public void loginAndGetUserProfileInvalidCredentialsTest() {
+        String username = "test";
+        String password = "password";
+
+        when(userManager.isValidCredentials(any(), any())).thenReturn(false);
+
+        assertThrows(RuntimeException.class, () -> loginService.loginAndGetUserProfile(username, password));
+
+        verify(userManager, times(1)).isValidCredentials(username, password);
+        verify(userManager, never()).getUserByUsername(username);
+        verify(tokenProvider, never()).generateToken(anyString(), anyLong());
     }
 }

@@ -46,4 +46,51 @@ public class PricingEstimationServiceTest {
         assertTrue(result.getSuggestedPricePerGallon() > 0);
         assertTrue(result.getTotalPrice() > 0);
     }
+
+    @Test
+    public void calculatePricesNonTexasStateTest() {
+        String gallonsRequestedStr = "500";
+        String state = "FL";
+        Long userId = 1L;
+        List<FuelQuote> quotes = new ArrayList<>();
+
+        when(fuelQuoteService.getFuelQuotesByUserId(userId)).thenReturn(quotes);
+
+        PricingEstimation result = pricingEstimationService.calculatePrices(gallonsRequestedStr, state, userId);
+
+        assertNotNull(result);
+        assertTrue(result.getSuggestedPricePerGallon() > 0);
+        assertTrue(result.getTotalPrice() > 0);
+    }
+
+    @Test
+    public void calculatePricesNoFuelQuotesTest() {
+        String gallonsRequestedStr = "500";
+        String state = "TX";
+        Long userId = 1L;
+
+        when(fuelQuoteService.getFuelQuotesByUserId(userId)).thenReturn(null);
+
+        PricingEstimation result = pricingEstimationService.calculatePrices(gallonsRequestedStr, state, userId);
+
+        assertNotNull(result);
+        assertTrue(result.getSuggestedPricePerGallon() > 0);
+        assertTrue(result.getTotalPrice() > 0);
+    }
+
+    @Test
+    public void calculatePricesOverThousandGallonsTest() {
+        String gallonsRequestedStr = "1500";
+        String state = "TX";
+        Long userId = 1L;
+        List<FuelQuote> quotes = new ArrayList<>();
+
+        when(fuelQuoteService.getFuelQuotesByUserId(userId)).thenReturn(quotes);
+
+        PricingEstimation result = pricingEstimationService.calculatePrices(gallonsRequestedStr, state, userId);
+
+        assertNotNull(result);
+        assertTrue(result.getSuggestedPricePerGallon() > 0);
+        assertTrue(result.getTotalPrice() > 0);
+    }
 }

@@ -100,4 +100,79 @@ public class FuelQuoteServiceTest {
         assertTrue(errors.contains("Suggested price cannot be null or negative."));
         assertTrue(errors.contains("Total amount due cannot be null or negative."));
     }    
+
+
+    @Test
+    public void addFuelQuoteClientInfoNotFoundTest() {
+        // given
+        Long userId = 1L;
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(2000);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().plusDays(10));
+        fuelQuoteDTO.setSuggestedPrice(2.5);
+        fuelQuoteDTO.setTotalAmountDue(5000.0);
+        
+        when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(null);
+
+        // then
+        assertThrows(RuntimeException.class, () -> fuelQuoteService.addFuelQuote(userId, fuelQuoteDTO));
+    }
+
+    @Test
+    public void addFuelQuoteUserNotFoundTest() {
+        // given
+        Long userId = 1L;
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(2000);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().plusDays(10));
+        fuelQuoteDTO.setSuggestedPrice(2.5);
+        fuelQuoteDTO.setTotalAmountDue(5000.0);
+
+        ClientInformation clientInformation = new ClientInformation();
+
+        when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(clientInformation);
+        when(userManager.getUserById(userId)).thenReturn(null);
+
+        // then
+        assertThrows(RuntimeException.class, () -> fuelQuoteService.addFuelQuote(userId, fuelQuoteDTO));
+    }
+
+    @Test
+    public void addFuelQuoteValidationErrorsTest() {
+        // given
+        Long userId = 1L;
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(-10);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().minusDays(5));
+        fuelQuoteDTO.setSuggestedPrice(-2.5);
+        fuelQuoteDTO.setTotalAmountDue(-100.0);
+
+        ClientInformation clientInformation = new ClientInformation();
+        UserCredentials user = new UserCredentials();
+        user.setId(userId);
+
+        when(clientInformationService.getClientInformationByUserId(userId)).thenReturn(clientInformation);
+        when(userManager.getUserById(userId)).thenReturn(user);
+
+        // then
+        assertThrows(RuntimeException.class, () -> fuelQuoteService.addFuelQuote(userId, fuelQuoteDTO));
+    }
+    
+    @Test
+    public void validateFuelQuoteNullValuesTest() {
+        // given
+        FuelQuoteDTO fuelQuoteDTO = new FuelQuoteDTO();
+        fuelQuoteDTO.setGallonsRequested(2000);
+        fuelQuoteDTO.setDeliveryDate(LocalDate.now().plusDays(10));
+        fuelQuoteDTO.setSuggestedPrice(null);
+        fuelQuoteDTO.setTotalAmountDue(null);
+
+        // when
+        String errors = fuelQuoteService.validateFuelQuote(fuelQuoteDTO);
+
+        // then
+        assertNotNull(errors); // This assertion checks if the errors string is not null
+        assertTrue(errors.contains("Suggested price cannot be null or negative."));
+        assertTrue(errors.contains("Total amount due cannot be null or negative."));
+    }
 }

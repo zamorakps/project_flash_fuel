@@ -72,6 +72,26 @@ public class ClientInformationServiceTest {
     
         // then
         assertNull(errors);
+    }
+
+    @Test
+    public void updateClientInformationTest_Error() {
+        // given
+        Long userId = 1L;
+        UserCredentials user = new UserCredentials();
+        user.setId(userId);
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName(null); // Here, setting the name to null will cause an error
+        user.setClientInformation(clientInformation);
+        
+        when(userCredentialsRepository.findById(userId)).thenReturn(Optional.of(user));
+    
+        // when
+        String errors = clientInformationService.updateClientInformation(userId, clientInformation);
+    
+        // then
+        assertNotNull(errors);
+        assertTrue(errors.contains("Name is required."));
     }    
 
     @Test
@@ -95,5 +115,23 @@ public class ClientInformationServiceTest {
         assertTrue(errors.contains("City is required"));
         assertTrue(errors.contains("State is required"));
         assertTrue(errors.contains("Zip Code is required"));
+    }
+
+    @Test
+    public void getUpdateProfileErrorsTest_InvalidZipCode() {
+        // given
+        ClientInformation clientInformation = new ClientInformation();
+        clientInformation.setName("Test Name");
+        clientInformation.setAddress("Test Address");
+        clientInformation.setCity("Test City");
+        clientInformation.setState("Test State");
+        clientInformation.setZipCode("invalid_zip_code"); // Here, setting an invalid zip code
+        
+        // when
+        String errors = clientInformationService.getUpdateProfileErrors(clientInformation);
+
+        // then
+        assertNotNull(errors);
+        assertTrue(errors.contains("Invalid Zip Code format."));
     }
 }
