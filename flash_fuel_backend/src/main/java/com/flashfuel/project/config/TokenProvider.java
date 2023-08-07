@@ -32,7 +32,7 @@ public class TokenProvider {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
-    private String mapToJsonString(Map<String, Object> data) {
+    /*private*/ public String mapToJsonString(Map<String, Object> data) {
         StringBuilder jsonString = new StringBuilder();
         jsonString.append("{");
         boolean first = true;
@@ -48,7 +48,7 @@ public class TokenProvider {
         return jsonString.toString();
     }
 
-    private String generateHmacSHA256Signature(String data, String secret) {
+    /*private*/ public String generateHmacSHA256Signature(String data, String secret) {
         try {
             SecretKeySpec secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
             javax.crypto.Mac mac = javax.crypto.Mac.getInstance("HmacSHA256");
