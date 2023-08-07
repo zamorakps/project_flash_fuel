@@ -1,0 +1,1 @@
+To view the code coverage report, locate the index.html file inside of the flash_fuel_backend/target/site/jacoco/ directory. Open a new tab in your browser and then drop the index.html file inside of it. From there, you should be able to view a general report and to navigate to more detailed reports that analyze the degree of coverage line-by-line.
